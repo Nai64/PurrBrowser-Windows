@@ -36,6 +36,12 @@ body {
   color: var(--text);
   min-height: 100vh;
   padding: 40px;
+  transition: background 220ms ease, color 220ms ease;
+}
+
+.settings-card,
+.settings-action {
+  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
 .settings-shell {

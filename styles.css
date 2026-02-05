@@ -44,6 +44,21 @@ body {
     var(--bg);
   color: var(--text);
   letter-spacing: 0.2px;
+  transition: background 220ms ease, color 220ms ease;
+}
+
+.browser-container,
+.sidebar,
+.toolbar,
+.address-bar,
+.download-shelf,
+.app-menu,
+.tab-item,
+.tab-favicon,
+.download-item,
+.menu-item,
+.menu-setting {
+  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
 .browser-container {
