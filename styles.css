@@ -460,16 +460,16 @@ body {
   gap: 8px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
   z-index: 20;
 }
 
 .download-shelf.active {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-  transition: opacity 200ms ease, transform 200ms ease, visibility 0s;
+  transform: translateY(0) scale(1);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
 }
 
 .download-shelf-header {
