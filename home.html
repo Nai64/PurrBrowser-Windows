@@ -31,7 +31,7 @@
           <input class="home-search-input" id="home-search-input" type="text" placeholder="Search" autocomplete="off">
           <button class="home-search-btn" type="submit">Go</button>
         </form>
-        <div class="home-search-meta" id="home-search-meta">Using current search engine</div>
+        <div class="home-search-meta" id="home-search-meta"></div>
       </div>
       <div class="home-kpis">
         <div class="kpi-bar">
@@ -102,7 +102,6 @@
     const dateEl = document.getElementById('home-date');
     const searchForm = document.getElementById('home-search-form');
     const searchInput = document.getElementById('home-search-input');
-    const searchMeta = document.getElementById('home-search-meta');
 
     const themeTokens = {
       midnight: {
@@ -222,8 +221,7 @@
       const searchUrl = params.get('searchUrl') || 'https://duckduckgo.com/?q=';
       const engineName = params.get('engineName') || 'Search';
 
-      searchMeta.textContent = `Using ${engineName}`;
-      searchInput.placeholder = `Search with ${engineName}`;
+      searchInput.placeholder = 'Search the web';
 
       searchForm.addEventListener('submit', (event) => {
         event.preventDefault();

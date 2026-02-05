@@ -224,10 +224,6 @@ body.home-ready {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.home-search-meta {
-  font-size: 12px;
-  color: var(--home-text-muted);
-}
 
 .home-grid {
   display: grid;
