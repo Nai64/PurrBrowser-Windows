@@ -268,6 +268,22 @@ body {
   transition: all 0.2s ease;
 }
 
+.tool-btn.downloads-has-items {
+  position: relative;
+}
+
+.tool-btn.downloads-has-items::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 0 2px rgba(15, 17, 21, 0.9);
+}
+
 .tool-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.06);
   border-color: var(--border);
@@ -430,22 +446,21 @@ body {
 }
 
 .download-shelf {
-  position: absolute;
-  left: 16px;
+  position: fixed;
   right: 16px;
-  bottom: 16px;
-  margin: 0 auto;
-  max-width: 880px;
-  background: rgba(23, 27, 36, 0.95);
+  top: 62px;
+  width: 320px;
+  background: rgba(20, 24, 36, 0.78);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: var(--shadow);
-  padding: 12px 12px 10px;
+  padding: 10px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px);
+  transform: translateY(-8px);
   transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
   z-index: 20;
 }
@@ -462,7 +477,7 @@ body {
   align-items: center;
   justify-content: space-between;
   color: var(--text);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .download-shelf-title {
@@ -490,7 +505,7 @@ body {
 .download-list {
   display: grid;
   gap: 8px;
-  max-height: 200px;
+  max-height: 240px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -498,8 +513,8 @@ body {
 .download-item {
   background: rgba(27, 33, 48, 0.9);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border-radius: 10px;
+  padding: 8px 10px;
   display: grid;
   gap: 8px;
   animation: shelf-pop 220ms ease;
@@ -514,7 +529,7 @@ body {
 
 .download-name {
   color: var(--text);
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -523,13 +538,13 @@ body {
 
 .download-status {
   color: var(--text-muted);
-  font-size: 12px;
-  min-width: 92px;
+  font-size: 11px;
+  min-width: 84px;
   text-align: right;
 }
 
 .download-progress {
-  height: 6px;
+  height: 5px;
   background: rgba(255, 255, 255, 0.06);
   border-radius: 999px;
   overflow: hidden;
@@ -551,9 +566,9 @@ body {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
   transition: all 0.2s ease;
 }

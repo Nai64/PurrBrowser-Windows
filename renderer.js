@@ -83,6 +83,7 @@ const searchEngineDropdown = document.getElementById('search-engine-dropdown');
 const downloadShelf = document.getElementById('download-shelf');
 const downloadList = document.getElementById('download-list');
 const toolbar = document.querySelector('.toolbar');
+const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloads"]') : null;
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
@@ -150,6 +151,9 @@ function setupEventListeners() {
         case 'menu':
           // Placeholder for future menu actions
           break;
+        case 'downloads':
+          toggleDownloadShelf();
+          break;
         default:
           break;
       }
@@ -192,6 +196,7 @@ function setupDownloadShelf() {
       downloadsById.clear();
       downloadList.innerHTML = '';
       downloadShelf.classList.remove('active');
+      updateDownloadBadge();
       return;
     }
 
@@ -216,6 +221,7 @@ function setupDownloadShelf() {
       if (downloadsById.size === 0) {
         downloadShelf.classList.remove('active');
       }
+      updateDownloadBadge();
     }
   });
 }
@@ -253,10 +259,27 @@ function updateDownloadItem(payload) {
   item.savePath = savePath;
 
   renderDownloadItem(item);
+  updateDownloadBadge();
+}
 
-  if (downloadsById.size > 0) {
-    downloadShelf.classList.add('active');
+function toggleDownloadShelf(forceState) {
+  if (!downloadShelf) return;
+
+  const nextState = typeof forceState === 'boolean'
+    ? forceState
+    : !downloadShelf.classList.contains('active');
+
+  if (nextState && downloadsById.size === 0) {
+    downloadShelf.classList.remove('active');
+    return;
   }
+
+  downloadShelf.classList.toggle('active', nextState);
+}
+
+function updateDownloadBadge() {
+  if (!downloadToggleBtn) return;
+  downloadToggleBtn.classList.toggle('downloads-has-items', downloadsById.size > 0);
 }
 
 function createDownloadElement(item) {
