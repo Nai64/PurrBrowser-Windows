@@ -731,6 +731,7 @@ function createWebview(tab) {
   webview.addEventListener('did-navigate', (e) => {
     updateTabUrl(tab.id, e.url);
     updateNavigationButtons();
+    requestFallbackFavicon(tab.id, e.url);
   });
   
   webview.addEventListener('did-navigate-in-page', (e) => {
@@ -828,7 +829,12 @@ function isWebviewReady(webview) {
 // Update tab loading state
 function updateTabLoading(tabId, loading) {
   const tab = getTab(tabId);
-  if (tab) tab.loading = loading;
+  if (tab) {
+    tab.loading = loading;
+    if (loading) {
+      tab.favicon = null;
+    }
+  }
   
   const tabElement = document.querySelector(`.tab-item[data-tab-id="${tabId}"]`);
   if (!tabElement) return;
@@ -837,8 +843,7 @@ function updateTabLoading(tabId, loading) {
   if (loading) {
     favicon.innerHTML = '<div class="tab-loading"></div>';
   } else {
-    favicon.innerHTML = tab.favicon ? 
-      `<img src="${tab.favicon}" alt="">` : '🌐';
+    renderTabFavicon(tabId, tab ? tab.favicon : null);
   }
 }
 
@@ -861,15 +866,48 @@ function updateTabTitle(tabId, title) {
 function updateTabFavicon(tabId, favicon) {
   const tab = getTab(tabId);
   if (tab) tab.favicon = favicon;
-  
-  if (!tab.loading) {
-    const tabElement = document.querySelector(`.tab-item[data-tab-id="${tabId}"]`);
-    if (!tabElement) return;
-    
-    const faviconElement = tabElement.querySelector('.tab-favicon');
-    if (faviconElement && favicon) {
-      faviconElement.innerHTML = `<img src="${favicon}" alt="">`;
-    }
+
+  if (!tab || tab.loading) return;
+  renderTabFavicon(tabId, favicon);
+}
+
+function renderTabFavicon(tabId, faviconUrl) {
+  const tabElement = document.querySelector(`.tab-item[data-tab-id="${tabId}"]`);
+  if (!tabElement) return;
+
+  const faviconElement = tabElement.querySelector('.tab-favicon');
+  if (!faviconElement) return;
+
+  faviconElement.dataset.fallback = '0';
+  faviconElement.innerHTML = '';
+
+  if (!faviconUrl) {
+    faviconElement.textContent = '🌐';
+    return;
+  }
+
+  const img = document.createElement('img');
+  img.src = faviconUrl;
+  img.alt = '';
+  img.addEventListener('error', () => {
+    if (faviconElement.dataset.fallback === '1') return;
+    faviconElement.dataset.fallback = '1';
+    faviconElement.textContent = '🌐';
+  }, { once: true });
+  faviconElement.appendChild(img);
+}
+
+function requestFallbackFavicon(tabId, url) {
+  const tab = getTab(tabId);
+  if (!tab || tab.favicon) return;
+  if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) return;
+
+  try {
+    const parsed = new URL(url);
+    const fallback = `${parsed.origin}/favicon.ico`;
+    updateTabFavicon(tabId, fallback);
+  } catch (error) {
+    // Ignore invalid URLs.
   }
 }
 
