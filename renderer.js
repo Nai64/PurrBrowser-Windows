@@ -96,7 +96,14 @@ function setupEventListeners() {
   // Search engine selector
   searchEngineBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    searchEngineDropdown.classList.toggle('active');
+    const isActive = searchEngineDropdown.classList.toggle('active');
+    
+    if (isActive) {
+      // Position dropdown below button
+      const rect = searchEngineBtn.getBoundingClientRect();
+      searchEngineDropdown.style.top = `${rect.bottom + 8}px`;
+      searchEngineDropdown.style.left = `${rect.left}px`;
+    }
   });
   
   // Close dropdown when clicking outside
