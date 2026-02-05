@@ -325,6 +325,11 @@ body {
   animation: ui-rise 280ms ease;
 }
 
+.sidebar-titlebar-spacer {
+  height: var(--titlebar-height);
+  background: var(--panel-glass);
+}
+
 .sidebar:hover {
   width: var(--sidebar-expanded);
 }
