@@ -299,11 +299,6 @@ function toggleDownloadShelf(forceState) {
     ? forceState
     : !downloadShelf.classList.contains('active');
 
-  if (nextState && downloadsById.size === 0) {
-    downloadShelf.classList.remove('active');
-    return;
-  }
-
   downloadShelf.classList.toggle('active', nextState);
 }
 
