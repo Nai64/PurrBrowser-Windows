@@ -44,7 +44,7 @@ body {
     var(--bg);
   color: var(--text);
   letter-spacing: 0.2px;
-  transition: background 220ms ease, color 220ms ease;
+  transition: background 520ms ease, color 520ms ease;
 }
 
 .browser-container,
@@ -58,7 +58,7 @@ body {
 .download-item,
 .menu-item,
 .menu-setting {
-  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition: background 520ms ease, color 520ms ease, border-color 520ms ease, box-shadow 520ms ease;
 }
 
 .browser-container {
