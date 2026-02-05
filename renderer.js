@@ -68,6 +68,8 @@ const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 const tabsContainer = document.getElementById('tabs-container');
 const webviewContainer = document.getElementById('webview-container');
 const { ipcRenderer } = require('electron');
+const path = require('path');
+const { pathToFileURL } = require('url');
 
 ipcRenderer.send('ui-debug', 'renderer loaded');
 window.addEventListener('click', () => {
@@ -86,9 +88,8 @@ const downloadHistoryList = document.getElementById('download-history-list');
 const toolbar = document.querySelector('.toolbar');
 const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloads"]') : null;
 const menuToggleBtn = toolbar ? toolbar.querySelector('[data-action="menu"]') : null;
+const sidebarSettingsBtn = document.getElementById('settings-btn');
 const appMenu = document.getElementById('app-menu');
-const menuPanels = appMenu ? appMenu.querySelectorAll('.menu-panel') : [];
-const themeToggleBtn = appMenu ? appMenu.querySelector('[data-action="toggle-theme"]') : null;
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
@@ -100,6 +101,9 @@ const DOWNLOAD_HISTORY_LIMIT = 40;
 let downloadHistory = [];
 const THEME_KEY = 'theme';
 let currentTheme = safeGetStorage(THEME_KEY, 'dark');
+const SETTINGS_SCHEMES = new Set(['app:', 'browser:', 'firefox:']);
+const SETTINGS_HOST = 'settings';
+let settingsPageUrl = '';
 
 // Initialize browser
 function init() {
@@ -107,7 +111,6 @@ function init() {
   updateSearchEngineUI();
 
   applyTheme(currentTheme);
-  updateThemeToggle();
   
   // Create first tab
   createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl);
@@ -122,6 +125,10 @@ function init() {
 // Setup all event listeners
 function setupEventListeners() {
   newTabBtn.addEventListener('click', () => createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl));
+
+  if (sidebarSettingsBtn) {
+    sidebarSettingsBtn.addEventListener('click', () => openSettingsPage());
+  }
   
   urlInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -219,15 +226,8 @@ function setupEventListeners() {
       }
 
       if (action === 'menu-settings') {
-        setMenuPanel('settings');
-      }
-
-      if (action === 'menu-back') {
-        setMenuPanel('main');
-      }
-
-      if (action === 'toggle-theme') {
-        toggleTheme();
+        openSettingsPage();
+        closeAppMenu();
       }
     });
   }
@@ -360,7 +360,6 @@ function toggleAppMenu(forceState) {
     : !appMenu.classList.contains('active');
 
   if (nextState) {
-    setMenuPanel('main');
     positionAppMenu();
   }
 
@@ -380,28 +379,14 @@ function positionAppMenu() {
   appMenu.style.right = `${rightOffset}px`;
 }
 
-function setMenuPanel(panelName) {
-  menuPanels.forEach((panel) => {
-    panel.classList.toggle('active', panel.dataset.panel === panelName);
-  });
-}
-
 function applyTheme(theme) {
   document.body.classList.toggle('theme-light', theme === 'light');
 }
 
-function updateThemeToggle() {
-  if (!themeToggleBtn) return;
-  const isLight = currentTheme === 'light';
-  themeToggleBtn.textContent = isLight ? 'Light' : 'Dark';
-  themeToggleBtn.setAttribute('aria-pressed', String(isLight));
-}
-
-function toggleTheme() {
-  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+function setTheme(theme) {
+  currentTheme = theme === 'light' ? 'light' : 'dark';
   safeSetStorage(THEME_KEY, currentTheme);
   applyTheme(currentTheme);
-  updateThemeToggle();
 }
 
 function updateDownloadBadge() {
@@ -414,6 +399,48 @@ function openDownloadHistory() {
   if (downloadHistoryList) {
     downloadHistoryList.scrollTop = 0;
   }
+}
+
+function getSettingsPageUrl(theme = currentTheme) {
+  if (!settingsPageUrl) {
+    const settingsPath = path.join(__dirname, 'settings.html');
+    settingsPageUrl = pathToFileURL(settingsPath).toString();
+  }
+
+  const url = new URL(settingsPageUrl);
+  url.searchParams.set('theme', theme);
+  return url.toString();
+}
+
+function isInternalSettingsUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return SETTINGS_SCHEMES.has(parsed.protocol) && parsed.hostname === SETTINGS_HOST;
+  } catch (error) {
+    return false;
+  }
+}
+
+function handleInternalNavigation(url) {
+  if (!isInternalSettingsUrl(url)) return false;
+
+  const parsed = new URL(url);
+  const theme = parsed.searchParams.get('theme');
+  if (theme === 'light' || theme === 'dark') {
+    setTheme(theme);
+  }
+
+  openSettingsPage();
+  return true;
+}
+
+function openSettingsPage() {
+  const webview = getActiveWebview();
+  if (!webview) return;
+
+  const settingsUrl = getSettingsPageUrl();
+  webview.src = settingsUrl;
+  updateTabUrl(activeTabId, `app://settings`);
 }
 
 function createDownloadElement(item) {
@@ -680,8 +707,17 @@ function createWebview(tab) {
     updateTabUrl(tab.id, e.url);
     updateNavigationButtons();
   });
+
+  webview.addEventListener('will-navigate', (e) => {
+    if (handleInternalNavigation(e.url)) {
+      e.preventDefault();
+    }
+  });
   
   webview.addEventListener('new-window', (e) => {
+    if (handleInternalNavigation(e.url)) {
+      return;
+    }
     createTab(e.url);
   });
   
@@ -810,12 +846,21 @@ function updateTabFavicon(tabId, favicon) {
 // Update tab URL
 function updateTabUrl(tabId, url) {
   const tab = getTab(tabId);
-  if (tab) tab.url = url;
+  const displayUrl = normalizeDisplayUrl(url);
+  if (tab) tab.url = displayUrl;
   
   if (activeTabId === tabId) {
-    urlInput.value = url;
-    updateSecurityIcon(url);
+    urlInput.value = displayUrl;
+    updateSecurityIcon(displayUrl);
   }
+}
+
+function normalizeDisplayUrl(url) {
+  if (!url) return url;
+  if (settingsPageUrl && url.startsWith(settingsPageUrl)) {
+    return 'app://settings';
+  }
+  return url;
 }
 
 // Search engine management
@@ -861,6 +906,11 @@ function navigateToUrl() {
   let url = urlInput.value.trim();
   
   if (!url) return;
+
+  if (isInternalSettingsUrl(url)) {
+    handleInternalNavigation(url);
+    return;
+  }
   
   // Check if it's a search query or URL
   if (!url.includes('.') && !url.includes('localhost') && !url.startsWith('http')) {
@@ -923,6 +973,9 @@ function updateSecurityIcon(url) {
   if (url.startsWith('https://')) {
     securityIcon.classList.add('secure');
     securityIcon.title = 'Secure connection';
+  } else if (isInternalSettingsUrl(url) || url.startsWith('app://')) {
+    securityIcon.classList.remove('secure');
+    securityIcon.title = 'Browser settings';
   } else {
     securityIcon.classList.remove('secure');
     securityIcon.title = 'Not secure';

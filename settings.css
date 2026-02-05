@@ -1,0 +1,117 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --panel: #171b24;
+  --panel-2: #1b2130;
+  --border: #262c3a;
+  --text: #e6eaf2;
+  --text-muted: #a3adbd;
+  --accent: #6aa9ff;
+  --accent-2: #7ef1d3;
+}
+
+body.theme-light {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --panel: #ffffff;
+  --panel-2: #f0f3f9;
+  --border: #d7ddea;
+  --text: #1a2230;
+  --text-muted: #5b677a;
+  --accent: #2b7bff;
+  --accent-2: #12b886;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Sora", "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: radial-gradient(1000px 700px at 10% -10%, rgba(106, 169, 255, 0.2), transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, rgba(126, 241, 211, 0.18), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 40px;
+}
+
+.settings-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.settings-header {
+  display: grid;
+  gap: 6px;
+}
+
+.settings-title {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+
+.settings-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.settings-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+}
+
+.settings-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.settings-card h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.settings-note {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.settings-action {
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  background: var(--panel-2);
+}
+
+.settings-action:hover {
+  border-color: rgba(106, 169, 255, 0.7);
+  background: rgba(106, 169, 255, 0.12);
+}
+
+.settings-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}

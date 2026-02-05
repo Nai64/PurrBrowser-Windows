@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-shell">
+    <header class="settings-header">
+      <div class="settings-title">Settings</div>
+      <div class="settings-subtitle">app://settings</div>
+    </header>
+
+    <section class="settings-card">
+      <div class="settings-card-header">
+        <h2>Appearance</h2>
+        <span class="settings-note">Current theme: <strong id="current-theme">Dark</strong></span>
+      </div>
+      <div class="settings-actions">
+        <a class="settings-action" href="app://settings?theme=dark">Dark</a>
+        <a class="settings-action" href="app://settings?theme=light">Light</a>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="settings-card-header">
+        <h2>Downloads</h2>
+        <span class="settings-note">History is stored locally.</span>
+      </div>
+      <p class="settings-text">Use the Downloads button or the menu to review recent files.</p>
+    </section>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const theme = params.get('theme');
+    const themeLabel = document.getElementById('current-theme');
+
+    if (theme === 'light') {
+      document.body.classList.add('theme-light');
+      themeLabel.textContent = 'Light';
+    } else {
+      document.body.classList.remove('theme-light');
+      themeLabel.textContent = 'Dark';
+    }
+  </script>
+</body>
+</html>
