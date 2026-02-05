@@ -263,12 +263,6 @@ body {
   color: #4ec9b0;
 }
 
-.search-engine-selector {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
 .search-engine-btn {
   background: transparent;
   border: none;

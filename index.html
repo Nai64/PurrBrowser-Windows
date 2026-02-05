@@ -70,37 +70,9 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
           </div>
-          <div class="search-engine-selector">
-            <button id="search-engine-btn" class="search-engine-btn" title="Search Engine">
-              <span id="search-engine-icon">🦆</span>
-            </button>
-            <div id="search-engine-dropdown" class="search-engine-dropdown">
-              <div class="search-engine-option" data-engine="duckduckgo">
-                <span class="engine-icon">🦆</span>
-                <span class="engine-name">DuckDuckGo</span>
-              </div>
-              <div class="search-engine-option" data-engine="google">
-                <span class="engine-icon">🔍</span>
-                <span class="engine-name">Google</span>
-              </div>
-              <div class="search-engine-option" data-engine="bing">
-                <span class="engine-icon">🅱️</span>
-                <span class="engine-name">Bing</span>
-              </div>
-              <div class="search-engine-option" data-engine="yahoo">
-                <span class="engine-icon">Ⓨ</span>
-                <span class="engine-name">Yahoo</span>
-              </div>
-              <div class="search-engine-option" data-engine="brave">
-                <span class="engine-icon">🦁</span>
-                <span class="engine-name">Brave</span>
-              </div>
-              <div class="search-engine-option" data-engine="ecosia">
-                <span class="engine-icon">🌱</span>
-                <span class="engine-name">Ecosia</span>
-              </div>
-            </div>
-          </div>
+          <button id="search-engine-btn" class="search-engine-btn" title="Search Engine">
+            <span id="search-engine-icon">🦆</span>
+          </button>
           <input type="text" id="url-input" class="url-input" placeholder="Search with DuckDuckGo or enter address">
           <button id="go-btn" class="go-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -125,6 +97,34 @@
       <div class="webview-container" id="webview-container">
         <!-- Webviews will be dynamically added here -->
       </div>
+    </div>
+  </div>
+
+  <!-- Search engine dropdown (positioned at body level for proper display) -->
+  <div id="search-engine-dropdown" class="search-engine-dropdown">
+    <div class="search-engine-option" data-engine="duckduckgo">
+      <span class="engine-icon">🦆</span>
+      <span class="engine-name">DuckDuckGo</span>
+    </div>
+    <div class="search-engine-option" data-engine="google">
+      <span class="engine-icon">🔍</span>
+      <span class="engine-name">Google</span>
+    </div>
+    <div class="search-engine-option" data-engine="bing">
+      <span class="engine-icon">🅱️</span>
+      <span class="engine-name">Bing</span>
+    </div>
+    <div class="search-engine-option" data-engine="yahoo">
+      <span class="engine-icon">Ⓨ</span>
+      <span class="engine-name">Yahoo</span>
+    </div>
+    <div class="search-engine-option" data-engine="brave">
+      <span class="engine-icon">🦁</span>
+      <span class="engine-name">Brave</span>
+    </div>
+    <div class="search-engine-option" data-engine="ecosia">
+      <span class="engine-icon">🌱</span>
+      <span class="engine-name">Ecosia</span>
     </div>
   </div>
 

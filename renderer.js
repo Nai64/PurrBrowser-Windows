@@ -64,14 +64,20 @@ const searchEngineDropdown = document.getElementById('search-engine-dropdown');
 
 // Initialize browser
 function init() {
+  console.log('Browser initializing...');
+  console.log('Search engine button:', searchEngineBtn);
+  console.log('Search engine dropdown:', searchEngineDropdown);
+  
   // Set initial search engine
   updateSearchEngineUI();
   
   // Create first tab
-  createTab(HOME_URL);
+  createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl);
   
   // Setup event listeners
   setupEventListeners();
+  
+  console.log('Browser initialized successfully');
 }
 
 // Setup all event listeners
@@ -94,32 +100,47 @@ function setupEventListeners() {
   });
   
   // Search engine selector
-  searchEngineBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isActive = searchEngineDropdown.classList.toggle('active');
+  if (searchEngineBtn && searchEngineDropdown) {
+    console.log('Setting up search engine selector...');
     
-    if (isActive) {
-      // Position dropdown below button
-      const rect = searchEngineBtn.getBoundingClientRect();
-      searchEngineDropdown.style.top = `${rect.bottom + 8}px`;
-      searchEngineDropdown.style.left = `${rect.left}px`;
-    }
-  });
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', () => {
-    searchEngineDropdown.classList.remove('active');
-  });
-  
-  // Search engine options
-  document.querySelectorAll('.search-engine-option').forEach(option => {
-    option.addEventListener('click', (e) => {
+    searchEngineBtn.addEventListener('click', (e) => {
+      console.log('Search engine button clicked!');
       e.stopPropagation();
-      const engine = option.dataset.engine;
-      setSearchEngine(engine);
+      const isActive = searchEngineDropdown.classList.toggle('active');
+      console.log('Dropdown active:', isActive);
+      
+      if (isActive) {
+        // Position dropdown below button
+        const rect = searchEngineBtn.getBoundingClientRect();
+        searchEngineDropdown.style.top = `${rect.bottom + 8}px`;
+        searchEngineDropdown.style.left = `${rect.left}px`;
+        console.log('Dropdown positioned at:', rect.bottom + 8, rect.left);
+      }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
       searchEngineDropdown.classList.remove('active');
     });
-  });
+    
+    // Search engine options
+    document.querySelectorAll('.search-engine-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        console.log('Search engine option clicked:', option.dataset.engine);
+        e.stopPropagation();
+        const engine = option.dataset.engine;
+        setSearchEngine(engine);
+        searchEngineDropdown.classList.remove('active');
+      });
+    });
+    
+    console.log('Search engine selector setup complete');
+  } else {
+    console.error('Search engine elements not found!', {
+      button: searchEngineBtn,
+      dropdown: searchEngineDropdown
+    });
+  }
 }
 
 // Create a new tab
