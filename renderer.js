@@ -43,8 +43,25 @@ const SEARCH_ENGINES = {
   }
 };
 
+function safeGetStorage(key, fallbackValue) {
+  try {
+    const value = localStorage.getItem(key);
+    return value || fallbackValue;
+  } catch (error) {
+    return fallbackValue;
+  }
+}
+
+function safeSetStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    // Ignore storage errors in restricted contexts.
+  }
+}
+
 // Default search engine (DuckDuckGo)
-let currentSearchEngine = localStorage.getItem('searchEngine') || 'duckduckgo';
+let currentSearchEngine = safeGetStorage('searchEngine', 'duckduckgo');
 const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 
 // DOM elements
@@ -64,10 +81,6 @@ const searchEngineDropdown = document.getElementById('search-engine-dropdown');
 
 // Initialize browser
 function init() {
-  console.log('Browser initializing...');
-  console.log('Search engine button:', searchEngineBtn);
-  console.log('Search engine dropdown:', searchEngineDropdown);
-  
   // Set initial search engine
   updateSearchEngineUI();
   
@@ -76,8 +89,6 @@ function init() {
   
   // Setup event listeners
   setupEventListeners();
-  
-  console.log('Browser initialized successfully');
 }
 
 // Setup all event listeners
@@ -376,7 +387,7 @@ function updateTabUrl(tabId, url) {
 function setSearchEngine(engineKey) {
   if (SEARCH_ENGINES[engineKey]) {
     currentSearchEngine = engineKey;
-    localStorage.setItem('searchEngine', engineKey);
+    safeSetStorage('searchEngine', engineKey);
     updateSearchEngineUI();
   }
 }
