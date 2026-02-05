@@ -294,12 +294,19 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   min-width: 180px;
   z-index: 10000;
-  display: none;
+  display: block;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
 }
 
 .search-engine-dropdown.active {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
 }
 
 .search-engine-option {
