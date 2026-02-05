@@ -215,6 +215,10 @@ function setupDownloadShelf() {
       ipcRenderer.send('download-show', { path: download.savePath });
     }
 
+    if (action === 'cancel-download') {
+      ipcRenderer.send('download-cancel', { id: download.id });
+    }
+
     if (action === 'remove-download') {
       downloadsById.delete(downloadId);
       itemElement.remove();
@@ -235,7 +239,8 @@ function updateDownloadItem(payload) {
     receivedBytes,
     totalBytes,
     state,
-    savePath
+    savePath,
+    speedBps
   } = payload;
 
   let item = downloadsById.get(id);
@@ -246,7 +251,8 @@ function updateDownloadItem(payload) {
       receivedBytes: 0,
       totalBytes: totalBytes || 0,
       state,
-      savePath
+      savePath,
+      speedBps: speedBps || 0
     };
     downloadsById.set(id, item);
     downloadList.prepend(createDownloadElement(item));
@@ -257,6 +263,7 @@ function updateDownloadItem(payload) {
   item.totalBytes = totalBytes || item.totalBytes;
   item.state = state;
   item.savePath = savePath;
+  item.speedBps = speedBps || 0;
 
   renderDownloadItem(item);
   updateDownloadBadge();
@@ -295,6 +302,7 @@ function createDownloadElement(item) {
       <div class="download-progress-bar"></div>
     </div>
     <div class="download-actions">
+      <button class="download-action ghost" data-action="cancel-download">Cancel</button>
       <button class="download-action" data-action="open-download">Open</button>
       <button class="download-action ghost" data-action="show-download">Show</button>
       <button class="download-action ghost" data-action="remove-download">Clear</button>
@@ -317,6 +325,7 @@ function renderDownloadItem(item) {
   const total = item.totalBytes || 0;
   const received = item.receivedBytes || 0;
   const percent = total > 0 ? Math.min(100, Math.round((received / total) * 100)) : 0;
+  const speedText = item.speedBps > 0 ? ` • ${formatSpeed(item.speedBps)}` : '';
 
   if (item.state === 'completed') {
     statusEl.textContent = 'Done';
@@ -330,18 +339,37 @@ function renderDownloadItem(item) {
     statusEl.textContent = 'Paused';
     progressEl.style.width = `${percent}%`;
     actions.forEach((button) => button.classList.remove('download-hidden'));
+  } else if (item.state === 'cancelled') {
+    statusEl.textContent = 'Cancelled';
+    progressEl.style.width = `${percent}%`;
+    actions.forEach((button) => button.classList.remove('download-hidden'));
   } else {
-    statusEl.textContent = total > 0 ? `Downloading ${percent}%` : 'Downloading';
+    statusEl.textContent = total > 0 ? `Downloading ${percent}%${speedText}` : `Downloading${speedText}`;
     progressEl.style.width = `${percent}%`;
     actions.forEach((button) => {
       const action = button.dataset.action;
-      if (action === 'remove-download') {
+      if (action === 'remove-download' || action === 'cancel-download') {
         button.classList.remove('download-hidden');
       } else {
         button.classList.add('download-hidden');
       }
     });
   }
+}
+
+function formatSpeed(bytesPerSecond) {
+  if (!bytesPerSecond || !Number.isFinite(bytesPerSecond)) return '';
+  const units = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
+  let value = bytesPerSecond;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+
+  const formatted = value >= 100 ? value.toFixed(0) : value >= 10 ? value.toFixed(1) : value.toFixed(2);
+  return `${formatted} ${units[unitIndex]}`;
 }
 
 // Create a new tab

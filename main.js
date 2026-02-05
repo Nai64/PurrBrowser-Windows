@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 let mainWindow;
+const activeDownloads = new Map();
 
 function createWindow() {
   // Remove menu bar
@@ -70,26 +71,48 @@ app.whenReady().then(() => {
 
     const downloadId = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
 
+    activeDownloads.set(downloadId, {
+      item,
+      lastBytes: item.getReceivedBytes(),
+      lastTime: Date.now(),
+      speedBps: 0
+    });
+
     mainWindow.webContents.send('download-item', {
       id: downloadId,
       filename,
       receivedBytes: item.getReceivedBytes(),
       totalBytes: item.getTotalBytes(),
       state: 'progress',
-      savePath
+      savePath,
+      speedBps: 0
     });
 
     item.on('updated', (event, state) => {
       if (!mainWindow) return;
 
+      const entry = activeDownloads.get(downloadId);
+      if (!entry) return;
+
+      const now = Date.now();
+      const receivedBytes = item.getReceivedBytes();
+      const deltaBytes = receivedBytes - entry.lastBytes;
+      const deltaSeconds = Math.max(0.1, (now - entry.lastTime) / 1000);
+      const speedBps = Math.max(0, deltaBytes / deltaSeconds);
+
+      entry.lastBytes = receivedBytes;
+      entry.lastTime = now;
+      entry.speedBps = speedBps;
+
       if (state === 'interrupted') {
         mainWindow.webContents.send('download-item', {
           id: downloadId,
           filename,
-          receivedBytes: item.getReceivedBytes(),
+          receivedBytes,
           totalBytes: item.getTotalBytes(),
           state: 'interrupted',
-          savePath
+          savePath,
+          speedBps: entry.speedBps
         });
         return;
       }
@@ -98,10 +121,11 @@ app.whenReady().then(() => {
         mainWindow.webContents.send('download-item', {
           id: downloadId,
           filename,
-          receivedBytes: item.getReceivedBytes(),
+          receivedBytes,
           totalBytes: item.getTotalBytes(),
           state: 'progress',
-          savePath
+          savePath,
+          speedBps: entry.speedBps
         });
       }
     });
@@ -109,15 +133,20 @@ app.whenReady().then(() => {
     item.once('done', (event, state) => {
       if (!mainWindow) return;
 
-      const normalizedState = state === 'completed' ? 'completed' : 'failed';
+      const entry = activeDownloads.get(downloadId);
+      const speedBps = entry ? entry.speedBps : 0;
+      const normalizedState = state === 'completed' ? 'completed' : state === 'cancelled' ? 'cancelled' : 'failed';
       mainWindow.webContents.send('download-item', {
         id: downloadId,
         filename,
         receivedBytes: item.getReceivedBytes(),
         totalBytes: item.getTotalBytes(),
         state: normalizedState,
-        savePath
+        savePath,
+        speedBps
       });
+
+      activeDownloads.delete(downloadId);
     });
   });
 
@@ -157,6 +186,13 @@ ipcMain.on('download-show', (event, payload) => {
 ipcMain.on('download-open', (event, payload) => {
   if (payload?.path) {
     shell.openPath(payload.path);
+  }
+});
+
+ipcMain.on('download-cancel', (event, payload) => {
+  const entry = activeDownloads.get(payload?.id);
+  if (entry && !entry.item.isPaused()) {
+    entry.item.cancel();
   }
 });
 
