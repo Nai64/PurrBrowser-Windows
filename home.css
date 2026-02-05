@@ -28,7 +28,7 @@ body {
     radial-gradient(900px 600px at 95% 0%, var(--home-glow-2), transparent 55%),
     var(--home-bg);
   color: var(--home-text);
-  padding: 28px 32px;
+  padding: 24px 28px;
   overflow: hidden;
   transition: background 520ms ease, color 520ms ease;
   opacity: 0;
@@ -85,7 +85,7 @@ body.home-ready {
   max-width: 1000px;
   margin: 0 auto;
   display: grid;
-  gap: 20px;
+  gap: 14px;
   position: relative;
   z-index: 1;
 }
@@ -94,7 +94,8 @@ body.home-ready {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
+  margin-bottom: -2px;
 }
 
 .home-title {
@@ -125,14 +126,15 @@ body.home-ready {
   border-radius: 18px;
   padding: 16px;
   display: grid;
-  gap: 16px;
+  gap: 12px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
 }
 
 .home-hero {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1fr);
+  align-items: start;
 }
 
 .home-kpis {
@@ -220,7 +222,8 @@ body.home-ready {
 .home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  gap: 12px;
+  margin-top: 2px;
 }
 
 .home-panel {
@@ -229,7 +232,7 @@ body.home-ready {
   border-radius: 16px;
   padding: 16px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .home-divider {
@@ -239,7 +242,7 @@ body.home-ready {
 
 .home-mini-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .home-mini {
@@ -249,7 +252,7 @@ body.home-ready {
 
 .home-sessions {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .home-session {
@@ -275,7 +278,7 @@ body.home-ready {
 
 .home-links {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .home-link {
@@ -301,7 +304,7 @@ body.home-ready {
 
 @media (max-width: 720px) {
   body {
-    padding: 28px;
+    padding: 22px;
   }
 
   .home-header {
