@@ -521,13 +521,13 @@ body {
   color: #ff5c5c;
 }
 
-.tool-btn[data-window="minimize"]:hover {
+.toolbar .tool-btn[data-window="minimize"]:hover {
   background: rgba(106, 169, 255, 0.16);
   border-color: rgba(106, 169, 255, 0.45);
   color: #9dc4ff;
 }
 
-.tool-btn[data-window="maximize"]:hover {
+.toolbar .tool-btn[data-window="maximize"]:hover {
   background: rgba(126, 241, 211, 0.16);
   border-color: rgba(126, 241, 211, 0.45);
   color: #9ff4dd;
