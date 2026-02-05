@@ -128,7 +128,7 @@ body.home-ready {
   display: grid;
   gap: 10px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
-  min-height: 72px;
+  min-height: 74px;
 }
 
 .home-hero {
@@ -151,7 +151,7 @@ body.home-ready {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
-  min-height: 72px;
+  min-height: 74px;
 }
 
 .kpi-pair {
