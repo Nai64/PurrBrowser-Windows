@@ -321,11 +321,10 @@ body {
 }
 
 .engine-icon {
-  font-size: 18px;
-  width: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 16px;
+  height: 16px;
+  display: block;
+  filter: invert(1);
 }
 
 .engine-name {

@@ -7,37 +7,37 @@ let tabIdCounter = 0;
 const SEARCH_ENGINES = {
   duckduckgo: {
     name: 'DuckDuckGo',
-    icon: '🦆',
+    iconPath: 'assets/icons/duckduckgo.svg',
     searchUrl: 'https://duckduckgo.com/?q=',
     homeUrl: 'https://duckduckgo.com'
   },
   google: {
     name: 'Google',
-    icon: '🔍',
+    iconPath: 'assets/icons/google.svg',
     searchUrl: 'https://www.google.com/search?q=',
     homeUrl: 'https://www.google.com'
   },
   bing: {
     name: 'Bing',
-    icon: '🅱️',
+    iconPath: 'assets/icons/bing.ico',
     searchUrl: 'https://www.bing.com/search?q=',
     homeUrl: 'https://www.bing.com'
   },
   yahoo: {
     name: 'Yahoo',
-    icon: 'Ⓨ',
+    iconPath: 'assets/icons/yahoo.ico',
     searchUrl: 'https://search.yahoo.com/search?p=',
     homeUrl: 'https://www.yahoo.com'
   },
   brave: {
     name: 'Brave',
-    icon: '🦁',
+    iconPath: 'assets/icons/brave.svg',
     searchUrl: 'https://search.brave.com/search?q=',
     homeUrl: 'https://search.brave.com'
   },
   ecosia: {
     name: 'Ecosia',
-    icon: '🌱',
+    iconPath: 'assets/icons/ecosia.svg',
     searchUrl: 'https://www.ecosia.org/search?q=',
     homeUrl: 'https://www.ecosia.org'
   }
@@ -421,7 +421,10 @@ function setSearchEngine(engineKey) {
 
 function updateSearchEngineUI() {
   const engine = SEARCH_ENGINES[currentSearchEngine];
-  searchEngineIcon.textContent = engine.icon;
+  if (searchEngineIcon) {
+    searchEngineIcon.src = engine.iconPath;
+    searchEngineIcon.alt = engine.name;
+  }
   searchEngineBtn.title = `Search with ${engine.name}`;
   urlInput.placeholder = `Search with ${engine.name} or enter address`;
   
