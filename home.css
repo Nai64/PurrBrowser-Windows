@@ -142,30 +142,33 @@ body.home-ready {
   gap: 12px;
 }
 
-.home-kpi {
+.home-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kpi-chip {
   background: var(--home-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 12px 14px;
-  display: grid;
-  gap: 6px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.kpi-label {
-  font-size: 12px;
+.kpi-chip .kpi-label {
+  font-size: 11px;
   color: var(--home-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.kpi-value {
-  font-size: 18px;
+.kpi-chip .kpi-value {
+  font-size: 16px;
   font-weight: 600;
-}
-
-.kpi-meta {
-  font-size: 12px;
-  color: var(--home-text-muted);
 }
 
 .home-search-title {
