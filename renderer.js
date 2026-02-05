@@ -412,6 +412,20 @@ function getSettingsPageUrl(theme = currentTheme) {
   return url.toString();
 }
 
+function applySettingsFromFileUrl(url) {
+  if (!settingsPageUrl || !url.startsWith(settingsPageUrl)) return;
+
+  try {
+    const parsed = new URL(url);
+    const theme = parsed.searchParams.get('theme');
+    if (theme === 'light' || theme === 'dark') {
+      setTheme(theme);
+    }
+  } catch (error) {
+    // Ignore malformed URLs.
+  }
+}
+
 function isInternalSettingsUrl(url) {
   try {
     const parsed = new URL(url);
@@ -858,6 +872,7 @@ function updateTabUrl(tabId, url) {
 function normalizeDisplayUrl(url) {
   if (!url) return url;
   if (settingsPageUrl && url.startsWith(settingsPageUrl)) {
+    applySettingsFromFileUrl(url);
     return 'app://settings';
   }
   return url;

@@ -19,8 +19,8 @@
         <span class="settings-note">Current theme: <strong id="current-theme">Dark</strong></span>
       </div>
       <div class="settings-actions">
-        <a class="settings-action" href="app://settings?theme=dark">Dark</a>
-        <a class="settings-action" href="app://settings?theme=light">Light</a>
+        <button class="settings-action" data-theme="dark" type="button">Dark</button>
+        <button class="settings-action" data-theme="light" type="button">Light</button>
       </div>
     </section>
 
@@ -34,17 +34,32 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const theme = params.get('theme');
     const themeLabel = document.getElementById('current-theme');
+    const themeButtons = document.querySelectorAll('[data-theme]');
 
-    if (theme === 'light') {
-      document.body.classList.add('theme-light');
-      themeLabel.textContent = 'Light';
-    } else {
-      document.body.classList.remove('theme-light');
-      themeLabel.textContent = 'Dark';
+    function applyThemeFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const theme = params.get('theme') === 'light' ? 'light' : 'dark';
+
+      if (theme === 'light') {
+        document.body.classList.add('theme-light');
+        themeLabel.textContent = 'Light';
+      } else {
+        document.body.classList.remove('theme-light');
+        themeLabel.textContent = 'Dark';
+      }
     }
+
+    themeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const nextTheme = button.dataset.theme === 'light' ? 'light' : 'dark';
+        const params = new URLSearchParams(window.location.search);
+        params.set('theme', nextTheme);
+        window.location.search = params.toString();
+      });
+    });
+
+    applyThemeFromQuery();
   </script>
 </body>
 </html>
