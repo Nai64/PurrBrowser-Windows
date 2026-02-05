@@ -28,7 +28,7 @@ body {
     radial-gradient(900px 600px at 95% 0%, var(--home-glow-2), transparent 55%),
     var(--home-bg);
   color: var(--home-text);
-  padding: 40px 48px;
+  padding: 28px 32px;
   overflow: hidden;
   transition: background 520ms ease, color 520ms ease;
   opacity: 0;
@@ -53,39 +53,39 @@ body.home-ready {
   position: absolute;
   border-radius: 999px;
   filter: blur(0px);
-  opacity: 0.35;
+  opacity: 0.28;
   background: radial-gradient(circle at 30% 30%, var(--home-accent), transparent 65%);
   mix-blend-mode: screen;
 }
 
 .home-orb.orb-a {
-  width: 260px;
-  height: 260px;
+  width: 220px;
+  height: 220px;
   top: -40px;
   right: 8%;
 }
 
 .home-orb.orb-b {
-  width: 320px;
-  height: 320px;
+  width: 260px;
+  height: 260px;
   bottom: -120px;
   left: 6%;
   background: radial-gradient(circle at 40% 40%, var(--home-accent-2), transparent 70%);
 }
 
 .home-orb.orb-c {
-  width: 180px;
-  height: 180px;
+  width: 150px;
+  height: 150px;
   top: 40%;
   right: -60px;
   background: radial-gradient(circle at 50% 50%, var(--home-accent-2), transparent 70%);
 }
 
 .home-shell {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
   display: grid;
-  gap: 28px;
+  gap: 20px;
   position: relative;
   z-index: 1;
 }
@@ -98,7 +98,7 @@ body.home-ready {
 }
 
 .home-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.4px;
 }
@@ -110,7 +110,7 @@ body.home-ready {
 }
 
 .home-time {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -122,8 +122,8 @@ body.home-ready {
 .home-search-card {
   background: var(--home-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 18px;
+  padding: 16px;
   display: grid;
   gap: 16px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
@@ -131,8 +131,8 @@ body.home-ready {
 
 .home-hero {
   display: grid;
-  gap: 20px;
-  grid-template-columns: minmax(320px, 2fr) minmax(240px, 1fr);
+  gap: 16px;
+  grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1fr);
 }
 
 .home-kpis {
@@ -144,7 +144,7 @@ body.home-ready {
   background: var(--home-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: grid;
   gap: 6px;
 }
@@ -157,7 +157,7 @@ body.home-ready {
 }
 
 .kpi-value {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -167,13 +167,13 @@ body.home-ready {
 }
 
 .home-search-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .home-search {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -183,7 +183,7 @@ body.home-ready {
   background: var(--home-panel-2);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   color: var(--home-text);
   font-size: 14px;
   outline: none;
@@ -198,7 +198,7 @@ body.home-ready {
 .home-search-btn {
   border: none;
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 10px 14px;
   background: linear-gradient(135deg, var(--home-accent), var(--home-accent-2));
   color: #0c121b;
   font-weight: 600;
@@ -219,14 +219,14 @@ body.home-ready {
 .home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .home-panel {
   background: var(--home-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 16px;
+  padding: 16px;
   display: grid;
   gap: 12px;
 }
@@ -255,7 +255,7 @@ body.home-ready {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 12px;
   background: var(--home-panel-2);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -282,7 +282,7 @@ body.home-ready {
   color: var(--home-text);
   background: var(--home-panel-2);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 12px;
   transition: border-color 220ms ease, transform 200ms ease;
 }
