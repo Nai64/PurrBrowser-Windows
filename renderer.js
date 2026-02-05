@@ -67,6 +67,8 @@ const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 // DOM elements
 const tabsContainer = document.getElementById('tabs-container');
 const webviewContainer = document.getElementById('webview-container');
+const { ipcRenderer } = require('electron');
+
 const urlInput = document.getElementById('url-input');
 const newTabBtn = document.getElementById('new-tab-btn');
 const securityIcon = document.getElementById('security-icon');
@@ -113,6 +115,8 @@ function setupEventListeners() {
       
       const action = actionButton.dataset.action;
       if (!action) return;
+
+      ipcRenderer.send('ui-debug', `toolbar action: ${action}`);
       
       switch (action) {
         case 'back':

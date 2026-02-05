@@ -65,3 +65,8 @@ ipcMain.on('new-tab', (event, url) => {
 ipcMain.on('close-tab', (event, tabId) => {
   event.reply('remove-tab', tabId);
 });
+
+ipcMain.on('ui-debug', (event, payload) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[UI] ${timestamp} ${payload}`);
+});
