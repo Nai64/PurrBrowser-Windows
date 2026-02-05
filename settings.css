@@ -37,6 +37,14 @@ body {
   min-height: 100vh;
   padding: 40px;
   transition: background 520ms ease, color 520ms ease;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: background 520ms ease, color 520ms ease, opacity 360ms ease, transform 360ms ease;
+}
+
+body.settings-ready {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .settings-card,

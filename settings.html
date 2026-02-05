@@ -60,6 +60,9 @@
     });
 
     applyThemeFromQuery();
+    requestAnimationFrame(() => {
+      document.body.classList.add('settings-ready');
+    });
   </script>
 </body>
 </html>
