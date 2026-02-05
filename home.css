@@ -126,8 +126,9 @@ body.home-ready {
   border-radius: 18px;
   padding: 16px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+  min-height: 72px;
 }
 
 .home-hero {
@@ -187,6 +188,7 @@ body.home-ready {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .home-search-input {
