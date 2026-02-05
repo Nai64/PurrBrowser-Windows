@@ -519,7 +519,7 @@ body {
   height: var(--titlebar-height);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0 10px 0 12px;
   background: var(--panel-glass);
   border-bottom: none;
