@@ -183,6 +183,105 @@ body.theme-sunset {
   --accent-glow: rgba(240, 101, 67, 0.16);
 }
 
+body.theme-aurora {
+  --bg: #0b121f;
+  --bg-elev: #111b2b;
+  --panel: #111a2b;
+  --panel-2: #162338;
+  --border: #25324a;
+  --border-soft: #1d293c;
+  --text: #e6f0ff;
+  --text-muted: #a6b6d0;
+  --accent: #4dd6c9;
+  --accent-2: #b06bff;
+  --shadow: 0 14px 40px rgba(6, 10, 18, 0.55);
+  --bg-grad-1: rgba(77, 214, 201, 0.16);
+  --bg-grad-2: rgba(176, 107, 255, 0.14);
+  --container-grad-1: rgba(11, 18, 31, 0.6);
+  --container-grad-2: rgba(11, 18, 31, 0.92);
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.14);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --panel-soft-hover: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgba(230, 240, 255, 0.12);
+  --scrollbar-thumb: #223047;
+  --scrollbar-thumb-hover: #2d3e5d;
+  --tab-active-bg: rgba(77, 214, 201, 0.2);
+  --tab-active-hover: rgba(77, 214, 201, 0.3);
+  --tab-active-border: rgba(77, 214, 201, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(77, 214, 201, 0.18);
+  --panel-glass: rgba(17, 26, 43, 0.9);
+  --panel-glass-strong: rgba(17, 26, 43, 0.78);
+  --menu-bg: rgba(17, 26, 43, 0.96);
+  --accent-glow: rgba(77, 214, 201, 0.18);
+}
+
+body.theme-graphite {
+  --bg: #121417;
+  --bg-elev: #171b20;
+  --panel: #1a1d22;
+  --panel-2: #232833;
+  --border: #2d3442;
+  --border-soft: #262c36;
+  --text: #e3e7ee;
+  --text-muted: #aab2c0;
+  --accent: #a1ff57;
+  --accent-2: #7bdcff;
+  --shadow: 0 14px 40px rgba(7, 9, 12, 0.5);
+  --bg-grad-1: rgba(161, 255, 87, 0.14);
+  --bg-grad-2: rgba(123, 220, 255, 0.12);
+  --container-grad-1: rgba(18, 20, 23, 0.6);
+  --container-grad-2: rgba(18, 20, 23, 0.92);
+  --hover: rgba(255, 255, 255, 0.05);
+  --hover-strong: rgba(255, 255, 255, 0.12);
+  --panel-soft: rgba(255, 255, 255, 0.03);
+  --panel-soft-hover: rgba(255, 255, 255, 0.07);
+  --chip-bg: rgba(227, 231, 238, 0.1);
+  --scrollbar-thumb: #2a313d;
+  --scrollbar-thumb-hover: #343c4b;
+  --tab-active-bg: rgba(161, 255, 87, 0.2);
+  --tab-active-hover: rgba(161, 255, 87, 0.28);
+  --tab-active-border: rgba(161, 255, 87, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(161, 255, 87, 0.18);
+  --panel-glass: rgba(26, 29, 34, 0.9);
+  --panel-glass-strong: rgba(26, 29, 34, 0.78);
+  --menu-bg: rgba(26, 29, 34, 0.96);
+  --accent-glow: rgba(161, 255, 87, 0.18);
+}
+
+body.theme-ocean {
+  --bg: #081620;
+  --bg-elev: #0e1d2a;
+  --panel: #0f2230;
+  --panel-2: #153044;
+  --border: #223e56;
+  --border-soft: #1a3246;
+  --text: #e0f3ff;
+  --text-muted: #9eb8cc;
+  --accent: #35b6ff;
+  --accent-2: #5ce6c4;
+  --shadow: 0 14px 40px rgba(4, 10, 16, 0.55);
+  --bg-grad-1: rgba(53, 182, 255, 0.16);
+  --bg-grad-2: rgba(92, 230, 196, 0.14);
+  --container-grad-1: rgba(8, 22, 32, 0.6);
+  --container-grad-2: rgba(8, 22, 32, 0.92);
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.14);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --panel-soft-hover: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgba(224, 243, 255, 0.12);
+  --scrollbar-thumb: #1b3447;
+  --scrollbar-thumb-hover: #23445b;
+  --tab-active-bg: rgba(53, 182, 255, 0.2);
+  --tab-active-hover: rgba(53, 182, 255, 0.3);
+  --tab-active-border: rgba(53, 182, 255, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(53, 182, 255, 0.18);
+  --panel-glass: rgba(15, 34, 48, 0.9);
+  --panel-glass-strong: rgba(15, 34, 48, 0.78);
+  --menu-bg: rgba(15, 34, 48, 0.96);
+  --accent-glow: rgba(53, 182, 255, 0.18);
+}
+
 body {
   font-family: "Manrope", "IBM Plex Sans", "Segoe UI", sans-serif;
   overflow: hidden;
