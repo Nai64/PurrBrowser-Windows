@@ -62,7 +62,6 @@ function safeSetStorage(key, value) {
 
 // Default search engine (DuckDuckGo)
 let currentSearchEngine = safeGetStorage('searchEngine', 'duckduckgo');
-const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 
 // DOM elements
 const tabsContainer = document.getElementById('tabs-container');
@@ -105,7 +104,9 @@ const THEMES = ['midnight', 'light', 'dusk', 'forest', 'sunset', 'aurora', 'grap
 let currentTheme = safeGetStorage(THEME_KEY, 'midnight');
 const SETTINGS_SCHEMES = new Set(['app:', 'browser:', 'firefox:']);
 const SETTINGS_HOST = 'settings';
+const HOME_HOST = 'home';
 let settingsPageUrl = '';
+let homePageUrl = '';
 
 // Initialize browser
 function init() {
@@ -115,7 +116,7 @@ function init() {
   applyTheme(currentTheme);
   
   // Create first tab
-  createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl);
+  createTab(getHomePageUrl());
   
   // Setup event listeners
   setupEventListeners();
@@ -126,7 +127,7 @@ function init() {
 
 // Setup all event listeners
 function setupEventListeners() {
-  newTabBtn.addEventListener('click', () => createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl));
+  newTabBtn.addEventListener('click', () => createTab(getHomePageUrl()));
 
   if (sidebarSettingsBtn) {
     sidebarSettingsBtn.addEventListener('click', () => openSettingsPage());
@@ -428,6 +429,21 @@ function getSettingsPageUrl(theme = currentTheme) {
   return url.toString();
 }
 
+function getHomePageUrl(theme = currentTheme, engineKey = currentSearchEngine) {
+  if (!homePageUrl) {
+    const homePath = path.join(__dirname, 'home.html');
+    homePageUrl = pathToFileURL(homePath).toString();
+  }
+
+  const engine = SEARCH_ENGINES[engineKey] || SEARCH_ENGINES.duckduckgo;
+  const url = new URL(homePageUrl);
+  url.searchParams.set('theme', THEMES.includes(theme) ? theme : 'midnight');
+  url.searchParams.set('engine', engineKey);
+  url.searchParams.set('engineName', engine.name);
+  url.searchParams.set('searchUrl', engine.searchUrl);
+  return url.toString();
+}
+
 function applySettingsFromFileUrl(url) {
   if (!settingsPageUrl || !url.startsWith(settingsPageUrl)) return;
 
@@ -442,6 +458,15 @@ function applySettingsFromFileUrl(url) {
   }
 }
 
+function isInternalHomeUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return SETTINGS_SCHEMES.has(parsed.protocol) && parsed.hostname === HOME_HOST;
+  } catch (error) {
+    return false;
+  }
+}
+
 function isInternalSettingsUrl(url) {
   try {
     const parsed = new URL(url);
@@ -452,16 +477,23 @@ function isInternalSettingsUrl(url) {
 }
 
 function handleInternalNavigation(url) {
-  if (!isInternalSettingsUrl(url)) return false;
+  if (isInternalSettingsUrl(url)) {
+    const parsed = new URL(url);
+    const theme = parsed.searchParams.get('theme');
+    if (THEMES.includes(theme)) {
+      setTheme(theme);
+    }
 
-  const parsed = new URL(url);
-  const theme = parsed.searchParams.get('theme');
-  if (theme === 'light' || theme === 'dark') {
-    setTheme(theme);
+    openSettingsPage();
+    return true;
   }
 
-  openSettingsPage();
-  return true;
+  if (isInternalHomeUrl(url)) {
+    openHomePage();
+    return true;
+  }
+
+  return false;
 }
 
 function openSettingsPage() {
@@ -471,6 +503,15 @@ function openSettingsPage() {
   const settingsUrl = getSettingsPageUrl();
   webview.src = settingsUrl;
   updateTabUrl(activeTabId, `app://settings`);
+}
+
+function openHomePage() {
+  const webview = getActiveWebview();
+  if (!webview) return;
+
+  const homeUrl = getHomePageUrl();
+  webview.src = homeUrl;
+  updateTabUrl(activeTabId, `app://home`);
 }
 
 function createDownloadElement(item) {
@@ -637,7 +678,7 @@ function formatSpeed(bytesPerSecond) {
 }
 
 // Create a new tab
-function createTab(url = HOME_URL) {
+function createTab(url = getHomePageUrl()) {
   const tabId = tabIdCounter++;
   
   // Create tab object
@@ -806,7 +847,7 @@ function closeTab(tabId) {
       switchTab(newActiveTab.id);
     } else {
       // No tabs left, create a new one
-      createTab(HOME_URL);
+      createTab(getHomePageUrl());
     }
   }
 }
@@ -929,6 +970,9 @@ function normalizeDisplayUrl(url) {
     applySettingsFromFileUrl(url);
     return 'app://settings';
   }
+  if (homePageUrl && url.startsWith(homePageUrl)) {
+    return 'app://home';
+  }
   return url;
 }
 
@@ -976,8 +1020,7 @@ function navigateToUrl() {
   
   if (!url) return;
 
-  if (isInternalSettingsUrl(url)) {
-    handleInternalNavigation(url);
+  if (handleInternalNavigation(url)) {
     return;
   }
   
@@ -1016,10 +1059,7 @@ function reloadPage() {
 }
 
 function navigateToHome() {
-  const webview = getActiveWebview();
-  if (webview) {
-    webview.src = SEARCH_ENGINES[currentSearchEngine].homeUrl;
-  }
+  openHomePage();
 }
 
 // Update navigation button states
@@ -1042,7 +1082,7 @@ function updateSecurityIcon(url) {
   if (url.startsWith('https://')) {
     securityIcon.classList.add('secure');
     securityIcon.title = 'Secure connection';
-  } else if (isInternalSettingsUrl(url) || url.startsWith('app://')) {
+  } else if (isInternalSettingsUrl(url) || isInternalHomeUrl(url) || url.startsWith('app://')) {
     securityIcon.classList.remove('secure');
     securityIcon.title = 'Browser settings';
   } else {
@@ -1056,7 +1096,7 @@ document.addEventListener('keydown', (e) => {
   // Ctrl/Cmd + T: New tab
   if ((e.ctrlKey || e.metaKey) && e.key === 't') {
     e.preventDefault();
-    createTab(HOME_URL);
+    createTab(getHomePageUrl());
   }
   
   // Ctrl/Cmd + W: Close tab

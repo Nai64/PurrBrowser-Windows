@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <div class="home-shell">
+    <header class="home-header">
+      <div class="home-title">Test Browser</div>
+      <div class="home-clock">
+        <div class="home-time" id="home-time">00:00</div>
+        <div class="home-date" id="home-date">Loading...</div>
+      </div>
+    </header>
+
+    <section class="home-search-card">
+      <div class="home-search-title">Search the web</div>
+      <form class="home-search" id="home-search-form">
+        <input class="home-search-input" id="home-search-input" type="text" placeholder="Search" autocomplete="off">
+        <button class="home-search-btn" type="submit">Go</button>
+      </form>
+      <div class="home-search-meta" id="home-search-meta">Using current search engine</div>
+    </section>
+
+    <section class="home-grid">
+      <div class="home-panel">
+        <div class="home-panel-title">Quick Links</div>
+        <div class="home-links">
+          <a class="home-link" href="https://www.youtube.com">YouTube</a>
+          <a class="home-link" href="https://www.github.com">GitHub</a>
+          <a class="home-link" href="https://www.reddit.com">Reddit</a>
+          <a class="home-link" href="https://news.ycombinator.com">Hacker News</a>
+          <a class="home-link" href="https://www.wikipedia.org">Wikipedia</a>
+          <a class="home-link" href="https://www.stackoverflow.com">Stack Overflow</a>
+        </div>
+      </div>
+      <div class="home-panel">
+        <div class="home-panel-title">Focus</div>
+        <div class="home-panel-text">
+          Pin what matters and keep your workspace clean. Themes, downloads, and tabs are all one click away.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const timeEl = document.getElementById('home-time');
+    const dateEl = document.getElementById('home-date');
+    const searchForm = document.getElementById('home-search-form');
+    const searchInput = document.getElementById('home-search-input');
+    const searchMeta = document.getElementById('home-search-meta');
+
+    const themeTokens = {
+      midnight: {
+        bg: '#0f1115',
+        panel: '#171b24',
+        panel2: '#1b2130',
+        text: '#e6eaf2',
+        textMuted: '#a3adbd',
+        accent: '#6aa9ff',
+        accent2: '#7ef1d3',
+        glow1: 'rgba(106, 169, 255, 0.16)',
+        glow2: 'rgba(126, 241, 211, 0.12)'
+      },
+      light: {
+        bg: '#f4f6fb',
+        panel: '#ffffff',
+        panel2: '#f0f3f9',
+        text: '#1a2230',
+        textMuted: '#5b677a',
+        accent: '#2b7bff',
+        accent2: '#12b886',
+        glow1: 'rgba(43, 123, 255, 0.14)',
+        glow2: 'rgba(18, 184, 134, 0.12)'
+      },
+      dusk: {
+        bg: '#140f1d',
+        panel: '#1e152a',
+        panel2: '#281c36',
+        text: '#efe8ff',
+        textMuted: '#c3b6d6',
+        accent: '#b084ff',
+        accent2: '#ff8a7a',
+        glow1: 'rgba(176, 132, 255, 0.2)',
+        glow2: 'rgba(255, 138, 122, 0.16)'
+      },
+      forest: {
+        bg: '#0e1512',
+        panel: '#17241d',
+        panel2: '#1f3026',
+        text: '#e3f4ea',
+        textMuted: '#a7c4b4',
+        accent: '#5bd19d',
+        accent2: '#d7b463',
+        glow1: 'rgba(91, 209, 157, 0.18)',
+        glow2: 'rgba(215, 180, 99, 0.14)'
+      },
+      sunset: {
+        bg: '#fff3ea',
+        panel: '#fff8f2',
+        panel2: '#ffe6d4',
+        text: '#2f1f1a',
+        textMuted: '#8c6a5f',
+        accent: '#f06543',
+        accent2: '#ffb347',
+        glow1: 'rgba(240, 101, 67, 0.16)',
+        glow2: 'rgba(255, 179, 71, 0.16)'
+      },
+      aurora: {
+        bg: '#0b121f',
+        panel: '#111a2b',
+        panel2: '#162338',
+        text: '#e6f0ff',
+        textMuted: '#a6b6d0',
+        accent: '#4dd6c9',
+        accent2: '#b06bff',
+        glow1: 'rgba(77, 214, 201, 0.16)',
+        glow2: 'rgba(176, 107, 255, 0.14)'
+      },
+      graphite: {
+        bg: '#121417',
+        panel: '#1a1d22',
+        panel2: '#232833',
+        text: '#e3e7ee',
+        textMuted: '#aab2c0',
+        accent: '#a1ff57',
+        accent2: '#7bdcff',
+        glow1: 'rgba(161, 255, 87, 0.14)',
+        glow2: 'rgba(123, 220, 255, 0.12)'
+      },
+      ocean: {
+        bg: '#081620',
+        panel: '#0f2230',
+        panel2: '#153044',
+        text: '#e0f3ff',
+        textMuted: '#9eb8cc',
+        accent: '#35b6ff',
+        accent2: '#5ce6c4',
+        glow1: 'rgba(53, 182, 255, 0.16)',
+        glow2: 'rgba(92, 230, 196, 0.14)'
+      }
+    };
+
+    function updateClock() {
+      const now = new Date();
+      timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      dateEl.textContent = now.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
+    }
+
+    function applyTheme() {
+      const params = new URLSearchParams(window.location.search);
+      const theme = params.get('theme') || 'midnight';
+      const tokens = themeTokens[theme] || themeTokens.midnight;
+
+      document.documentElement.style.setProperty('--home-bg', tokens.bg);
+      document.documentElement.style.setProperty('--home-panel', tokens.panel);
+      document.documentElement.style.setProperty('--home-panel-2', tokens.panel2);
+      document.documentElement.style.setProperty('--home-text', tokens.text);
+      document.documentElement.style.setProperty('--home-text-muted', tokens.textMuted);
+      document.documentElement.style.setProperty('--home-accent', tokens.accent);
+      document.documentElement.style.setProperty('--home-accent-2', tokens.accent2);
+      document.documentElement.style.setProperty('--home-glow-1', tokens.glow1);
+      document.documentElement.style.setProperty('--home-glow-2', tokens.glow2);
+    }
+
+    function setupSearch() {
+      const params = new URLSearchParams(window.location.search);
+      const searchUrl = params.get('searchUrl') || 'https://duckduckgo.com/?q=';
+      const engineName = params.get('engineName') || 'Search';
+
+      searchMeta.textContent = `Using ${engineName}`;
+      searchInput.placeholder = `Search with ${engineName}`;
+
+      searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        if (!query) return;
+        window.location.href = `${searchUrl}${encodeURIComponent(query)}`;
+      });
+    }
+
+    updateClock();
+    setInterval(updateClock, 60000);
+    applyTheme();
+    setupSearch();
+
+    requestAnimationFrame(() => {
+      document.body.classList.add('home-ready');
+    });
+  </script>
+</body>
+</html>
