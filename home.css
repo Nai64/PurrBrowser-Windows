@@ -296,7 +296,17 @@ body.home-ready {
   border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 8px 10px;
   border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   transition: border-color 220ms ease, transform 200ms ease;
+}
+
+.home-link-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .home-link:hover {
