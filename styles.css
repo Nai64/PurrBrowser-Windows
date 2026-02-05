@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 :root {
   --bg: #0f1115;
   --bg-elev: #141824;
