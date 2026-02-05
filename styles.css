@@ -510,6 +510,23 @@ body {
   padding-right: 4px;
 }
 
+.download-history {
+  display: grid;
+  gap: 6px;
+}
+
+.download-history-title {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 2px 2px 0;
+}
+
+.download-history .download-list {
+  max-height: 160px;
+}
+
 .download-item {
   background: rgba(27, 33, 48, 0.9);
   border: 1px solid var(--border-soft);
@@ -518,6 +535,11 @@ body {
   display: grid;
   gap: 8px;
   animation: shelf-pop 220ms ease;
+}
+
+.download-item.history {
+  background: rgba(23, 27, 36, 0.78);
+  border-color: rgba(38, 44, 58, 0.6);
 }
 
 .download-meta {

@@ -82,6 +82,7 @@ const searchEngineIcon = document.getElementById('search-engine-icon');
 const searchEngineDropdown = document.getElementById('search-engine-dropdown');
 const downloadShelf = document.getElementById('download-shelf');
 const downloadList = document.getElementById('download-list');
+const downloadHistoryList = document.getElementById('download-history-list');
 const toolbar = document.querySelector('.toolbar');
 const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloads"]') : null;
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
@@ -89,6 +90,10 @@ const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : 
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
 const homeBtn = toolbar ? toolbar.querySelector('[data-action="home"]') : null;
 const downloadsById = new Map();
+const dismissedDownloadIds = new Set();
+const DOWNLOAD_HISTORY_KEY = 'downloadHistory';
+const DOWNLOAD_HISTORY_LIMIT = 40;
+let downloadHistory = [];
 
 // Initialize browser
 function init() {
@@ -102,6 +107,7 @@ function init() {
   setupEventListeners();
 
   setupDownloadShelf();
+  loadDownloadHistory();
 }
 
 // Setup all event listeners
@@ -181,7 +187,7 @@ function setupEventListeners() {
 }
 
 function setupDownloadShelf() {
-  if (!downloadShelf || !downloadList) return;
+  if (!downloadShelf || !downloadList || !downloadHistoryList) return;
 
   ipcRenderer.on('download-item', (event, payload) => {
     updateDownloadItem(payload);
@@ -194,7 +200,11 @@ function setupDownloadShelf() {
     const action = actionButton.dataset.action;
     if (action === 'clear-downloads') {
       downloadsById.clear();
+      dismissedDownloadIds.clear();
+      downloadHistory = [];
+      saveDownloadHistory();
       downloadList.innerHTML = '';
+      downloadHistoryList.innerHTML = '';
       downloadShelf.classList.remove('active');
       updateDownloadBadge();
       return;
@@ -216,7 +226,12 @@ function setupDownloadShelf() {
     }
 
     if (action === 'cancel-download') {
+      dismissedDownloadIds.add(download.id);
       ipcRenderer.send('download-cancel', { id: download.id });
+      downloadsById.delete(downloadId);
+      itemElement.remove();
+      updateDownloadBadge();
+      return;
     }
 
     if (action === 'remove-download') {
@@ -231,7 +246,7 @@ function setupDownloadShelf() {
 }
 
 function updateDownloadItem(payload) {
-  if (!downloadShelf || !downloadList) return;
+  if (!downloadShelf || !downloadList || !downloadHistoryList) return;
 
   const {
     id,
@@ -242,6 +257,10 @@ function updateDownloadItem(payload) {
     savePath,
     speedBps
   } = payload;
+
+  if (dismissedDownloadIds.has(id)) {
+    return;
+  }
 
   let item = downloadsById.get(id);
   if (!item) {
@@ -267,6 +286,10 @@ function updateDownloadItem(payload) {
 
   renderDownloadItem(item);
   updateDownloadBadge();
+
+  if (state === 'completed' || state === 'failed') {
+    archiveDownload(item);
+  }
 }
 
 function toggleDownloadShelf(forceState) {
@@ -354,6 +377,78 @@ function renderDownloadItem(item) {
         button.classList.add('download-hidden');
       }
     });
+  }
+}
+
+function archiveDownload(item) {
+  if (!downloadHistoryList) return;
+
+  const existingIndex = downloadHistory.findIndex((entry) => entry.id === item.id);
+  if (existingIndex !== -1) {
+    downloadHistory[existingIndex] = { ...item };
+  } else {
+    downloadHistory.unshift({ ...item });
+  }
+
+  downloadHistory = downloadHistory.slice(0, DOWNLOAD_HISTORY_LIMIT);
+  saveDownloadHistory();
+  renderDownloadHistory();
+}
+
+function loadDownloadHistory() {
+  if (!downloadHistoryList) return;
+
+  downloadHistory = safeGetJson(DOWNLOAD_HISTORY_KEY, []);
+  if (!Array.isArray(downloadHistory)) {
+    downloadHistory = [];
+  }
+
+  renderDownloadHistory();
+}
+
+function saveDownloadHistory() {
+  safeSetStorage(DOWNLOAD_HISTORY_KEY, JSON.stringify(downloadHistory));
+}
+
+function renderDownloadHistory() {
+  if (!downloadHistoryList) return;
+  downloadHistoryList.innerHTML = '';
+
+  downloadHistory.forEach((item) => {
+    const element = createDownloadElement(item);
+    element.classList.add('history');
+    downloadHistoryList.appendChild(element);
+    renderHistoryItem(item, element);
+  });
+}
+
+function renderHistoryItem(item, element) {
+  const nameEl = element.querySelector('.download-name');
+  const statusEl = element.querySelector('.download-status');
+  const progressEl = element.querySelector('.download-progress-bar');
+  const actions = element.querySelectorAll('.download-action');
+
+  nameEl.textContent = item.filename || 'Download';
+  statusEl.textContent = item.state === 'completed' ? 'Done' : 'Failed';
+  progressEl.style.width = '100%';
+
+  actions.forEach((button) => {
+    const action = button.dataset.action;
+    if (action === 'open-download' || action === 'show-download' || action === 'remove-download') {
+      button.classList.remove('download-hidden');
+    } else {
+      button.classList.add('download-hidden');
+    }
+  });
+}
+
+function safeGetJson(key, fallbackValue) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallbackValue;
+    return JSON.parse(raw);
+  } catch (error) {
+    return fallbackValue;
   }
 }
 
