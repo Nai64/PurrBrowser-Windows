@@ -1,0 +1,16 @@
+{
+  "name": "sidebar-browser",
+  "version": "1.0.0",
+  "description": "A custom web browser with sidebar tabs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --debug"
+  },
+  "keywords": ["browser", "electron", "sidebar", "tabs"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
