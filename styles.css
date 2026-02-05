@@ -589,7 +589,7 @@ body {
 
 .app-menu {
   position: fixed;
-  min-width: 200px;
+  min-width: 260px;
   background: var(--menu-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
