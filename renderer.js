@@ -229,14 +229,14 @@ function setupDownloadShelf() {
       dismissedDownloadIds.add(download.id);
       ipcRenderer.send('download-cancel', { id: download.id });
       downloadsById.delete(downloadId);
-      itemElement.remove();
+      animateRemoveDownloadItem(itemElement);
       updateDownloadBadge();
       return;
     }
 
     if (action === 'remove-download') {
       downloadsById.delete(downloadId);
-      itemElement.remove();
+      animateRemoveDownloadItem(itemElement);
       if (downloadsById.size === 0) {
         downloadShelf.classList.remove('active');
       }
@@ -376,6 +376,14 @@ function renderDownloadItem(item) {
       }
     });
   }
+}
+
+function animateRemoveDownloadItem(element) {
+  if (!element) return;
+  element.classList.add('removing');
+  const cleanup = () => element.remove();
+  element.addEventListener('transitionend', cleanup, { once: true });
+  setTimeout(cleanup, 260);
 }
 
 function archiveDownload(item) {

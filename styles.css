@@ -535,6 +535,18 @@ body {
   display: grid;
   gap: 8px;
   animation: shelf-pop 220ms ease;
+  transform-origin: top right;
+  transition: opacity 180ms ease, transform 180ms ease, max-height 220ms ease, margin 220ms ease, padding 220ms ease;
+  max-height: 140px;
+}
+
+.download-item.removing {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  max-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .download-item.history {
