@@ -100,7 +100,8 @@ const DOWNLOAD_HISTORY_KEY = 'downloadHistory';
 const DOWNLOAD_HISTORY_LIMIT = 40;
 let downloadHistory = [];
 const THEME_KEY = 'theme';
-let currentTheme = safeGetStorage(THEME_KEY, 'dark');
+const THEMES = ['midnight', 'light', 'dusk', 'forest', 'sunset'];
+let currentTheme = safeGetStorage(THEME_KEY, 'midnight');
 const SETTINGS_SCHEMES = new Set(['app:', 'browser:', 'firefox:']);
 const SETTINGS_HOST = 'settings';
 let settingsPageUrl = '';
@@ -380,11 +381,17 @@ function positionAppMenu() {
 }
 
 function applyTheme(theme) {
-  document.body.classList.toggle('theme-light', theme === 'light');
+  const nextTheme = THEMES.includes(theme) ? theme : 'midnight';
+  document.body.className = document.body.className
+    .split(' ')
+    .filter((name) => !name.startsWith('theme-'))
+    .join(' ')
+    .trim();
+  document.body.classList.add(`theme-${nextTheme}`);
 }
 
 function setTheme(theme) {
-  currentTheme = theme === 'light' ? 'light' : 'dark';
+  currentTheme = THEMES.includes(theme) ? theme : 'midnight';
   safeSetStorage(THEME_KEY, currentTheme);
   applyTheme(currentTheme);
 }
@@ -408,7 +415,7 @@ function getSettingsPageUrl(theme = currentTheme) {
   }
 
   const url = new URL(settingsPageUrl);
-  url.searchParams.set('theme', theme);
+  url.searchParams.set('theme', THEMES.includes(theme) ? theme : 'midnight');
   return url.toString();
 }
 
@@ -418,7 +425,7 @@ function applySettingsFromFileUrl(url) {
   try {
     const parsed = new URL(url);
     const theme = parsed.searchParams.get('theme');
-    if (theme === 'light' || theme === 'dark') {
+    if (THEMES.includes(theme)) {
       setTheme(theme);
     }
   } catch (error) {

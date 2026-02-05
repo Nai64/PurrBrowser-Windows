@@ -16,11 +16,54 @@
     <section class="settings-card">
       <div class="settings-card-header">
         <h2>Appearance</h2>
-        <span class="settings-note">Current theme: <strong id="current-theme">Dark</strong></span>
+        <span class="settings-note">Current theme: <strong id="current-theme">Midnight</strong></span>
       </div>
-      <div class="settings-actions">
-        <button class="settings-action" data-theme="dark" type="button">Dark</button>
-        <button class="settings-action" data-theme="light" type="button">Light</button>
+      <div class="theme-grid" role="list">
+        <button class="theme-card" data-theme="midnight" type="button" role="listitem">
+          <div class="theme-preview theme-midnight">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="theme-meta">
+            <div class="theme-name">Midnight</div>
+            <div class="theme-desc">Deep navy + neon mint</div>
+          </div>
+        </button>
+        <button class="theme-card" data-theme="light" type="button" role="listitem">
+          <div class="theme-preview theme-light">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="theme-meta">
+            <div class="theme-name">Pearl</div>
+            <div class="theme-desc">Crisp light + blue accent</div>
+          </div>
+        </button>
+        <button class="theme-card" data-theme="dusk" type="button" role="listitem">
+          <div class="theme-preview theme-dusk">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="theme-meta">
+            <div class="theme-name">Dusk</div>
+            <div class="theme-desc">Purple haze + coral glow</div>
+          </div>
+        </button>
+        <button class="theme-card" data-theme="forest" type="button" role="listitem">
+          <div class="theme-preview theme-forest">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="theme-meta">
+            <div class="theme-name">Forest</div>
+            <div class="theme-desc">Emerald + warm brass</div>
+          </div>
+        </button>
+        <button class="theme-card" data-theme="sunset" type="button" role="listitem">
+          <div class="theme-preview theme-sunset">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="theme-meta">
+            <div class="theme-name">Sunset</div>
+            <div class="theme-desc">Terracotta + soft amber</div>
+          </div>
+        </button>
       </div>
     </section>
 
@@ -36,23 +79,37 @@
   <script>
     const themeLabel = document.getElementById('current-theme');
     const themeButtons = document.querySelectorAll('[data-theme]');
+    const themeLabels = {
+      midnight: 'Midnight',
+      light: 'Pearl',
+      dusk: 'Dusk',
+      forest: 'Forest',
+      sunset: 'Sunset'
+    };
 
     function applyThemeFromQuery() {
       const params = new URLSearchParams(window.location.search);
-      const theme = params.get('theme') === 'light' ? 'light' : 'dark';
+      const theme = params.get('theme') || 'midnight';
+      const safeTheme = themeLabels[theme] ? theme : 'midnight';
 
-      if (theme === 'light') {
-        document.body.classList.add('theme-light');
-        themeLabel.textContent = 'Light';
-      } else {
-        document.body.classList.remove('theme-light');
-        themeLabel.textContent = 'Dark';
-      }
+      document.body.className = document.body.className
+        .split(' ')
+        .filter((name) => !name.startsWith('theme-'))
+        .join(' ')
+        .trim();
+
+      document.body.classList.add(`theme-${safeTheme}`);
+      themeLabel.textContent = themeLabels[safeTheme];
+
+      themeButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.theme === safeTheme);
+        button.setAttribute('aria-pressed', String(button.dataset.theme === safeTheme));
+      });
     }
 
     themeButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const nextTheme = button.dataset.theme === 'light' ? 'light' : 'dark';
+        const nextTheme = themeLabels[button.dataset.theme] ? button.dataset.theme : 'midnight';
         const params = new URLSearchParams(window.location.search);
         params.set('theme', nextTheme);
         window.location.search = params.toString();

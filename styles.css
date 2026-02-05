@@ -82,6 +82,105 @@ body.theme-light {
   --accent-glow: rgba(43, 123, 255, 0.12);
 }
 
+body.theme-dusk {
+  --bg: #140f1d;
+  --bg-elev: #1b1426;
+  --panel: #1e152a;
+  --panel-2: #281c36;
+  --border: #3a2b4a;
+  --border-soft: #2f243d;
+  --text: #efe8ff;
+  --text-muted: #c3b6d6;
+  --accent: #b084ff;
+  --accent-2: #ff8a7a;
+  --shadow: 0 14px 40px rgba(12, 6, 18, 0.5);
+  --bg-grad-1: rgba(176, 132, 255, 0.2);
+  --bg-grad-2: rgba(255, 138, 122, 0.16);
+  --container-grad-1: rgba(20, 15, 29, 0.6);
+  --container-grad-2: rgba(20, 15, 29, 0.92);
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.14);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --panel-soft-hover: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgba(239, 232, 255, 0.12);
+  --scrollbar-thumb: #3d2b52;
+  --scrollbar-thumb-hover: #4b3566;
+  --tab-active-bg: rgba(176, 132, 255, 0.22);
+  --tab-active-hover: rgba(176, 132, 255, 0.32);
+  --tab-active-border: rgba(176, 132, 255, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(176, 132, 255, 0.18);
+  --panel-glass: rgba(30, 21, 42, 0.9);
+  --panel-glass-strong: rgba(30, 21, 42, 0.78);
+  --menu-bg: rgba(30, 21, 42, 0.96);
+  --accent-glow: rgba(176, 132, 255, 0.18);
+}
+
+body.theme-forest {
+  --bg: #0e1512;
+  --bg-elev: #13201a;
+  --panel: #17241d;
+  --panel-2: #1f3026;
+  --border: #2b3f33;
+  --border-soft: #223428;
+  --text: #e3f4ea;
+  --text-muted: #a7c4b4;
+  --accent: #5bd19d;
+  --accent-2: #d7b463;
+  --shadow: 0 14px 40px rgba(6, 12, 9, 0.5);
+  --bg-grad-1: rgba(91, 209, 157, 0.18);
+  --bg-grad-2: rgba(215, 180, 99, 0.14);
+  --container-grad-1: rgba(14, 21, 18, 0.6);
+  --container-grad-2: rgba(14, 21, 18, 0.92);
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.14);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --panel-soft-hover: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgba(227, 244, 234, 0.12);
+  --scrollbar-thumb: #2b3f33;
+  --scrollbar-thumb-hover: #355142;
+  --tab-active-bg: rgba(91, 209, 157, 0.2);
+  --tab-active-hover: rgba(91, 209, 157, 0.3);
+  --tab-active-border: rgba(91, 209, 157, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(91, 209, 157, 0.18);
+  --panel-glass: rgba(23, 36, 29, 0.9);
+  --panel-glass-strong: rgba(23, 36, 29, 0.78);
+  --menu-bg: rgba(23, 36, 29, 0.96);
+  --accent-glow: rgba(91, 209, 157, 0.18);
+}
+
+body.theme-sunset {
+  --bg: #fff3ea;
+  --bg-elev: #fff8f2;
+  --panel: #fff8f2;
+  --panel-2: #ffe6d4;
+  --border: #f2cdb5;
+  --border-soft: #f7dccd;
+  --text: #2f1f1a;
+  --text-muted: #8c6a5f;
+  --accent: #f06543;
+  --accent-2: #ffb347;
+  --shadow: 0 12px 30px rgba(80, 45, 30, 0.16);
+  --bg-grad-1: rgba(240, 101, 67, 0.14);
+  --bg-grad-2: rgba(255, 179, 71, 0.16);
+  --container-grad-1: rgba(255, 243, 234, 0.65);
+  --container-grad-2: rgba(255, 243, 234, 0.95);
+  --hover: rgba(0, 0, 0, 0.04);
+  --hover-strong: rgba(0, 0, 0, 0.08);
+  --panel-soft: rgba(0, 0, 0, 0.03);
+  --panel-soft-hover: rgba(0, 0, 0, 0.06);
+  --chip-bg: rgba(47, 31, 26, 0.08);
+  --scrollbar-thumb: #e3bfa9;
+  --scrollbar-thumb-hover: #d2a88f;
+  --tab-active-bg: rgba(240, 101, 67, 0.18);
+  --tab-active-hover: rgba(240, 101, 67, 0.26);
+  --tab-active-border: rgba(240, 101, 67, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(240, 101, 67, 0.16);
+  --panel-glass: rgba(255, 248, 242, 0.92);
+  --panel-glass-strong: rgba(255, 248, 242, 0.8);
+  --menu-bg: rgba(255, 248, 242, 0.96);
+  --accent-glow: rgba(240, 101, 67, 0.16);
+}
+
 body {
   font-family: "Sora", "IBM Plex Sans", "Segoe UI", sans-serif;
   overflow: hidden;
