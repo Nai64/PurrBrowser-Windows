@@ -16,6 +16,26 @@
   --accent: #6aa9ff;
   --accent-2: #7ef1d3;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  --theme-transition: 520ms;
+  --bg-grad-1: rgba(106, 169, 255, 0.16);
+  --bg-grad-2: rgba(126, 241, 211, 0.12);
+  --container-grad-1: rgba(15, 17, 21, 0.4);
+  --container-grad-2: rgba(15, 17, 21, 0.9);
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.12);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --panel-soft-hover: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgba(255, 255, 255, 0.08);
+  --scrollbar-thumb: #2a3140;
+  --scrollbar-thumb-hover: #354158;
+  --tab-active-bg: linear-gradient(135deg, rgba(106, 169, 255, 0.18), rgba(126, 241, 211, 0.12));
+  --tab-active-hover: linear-gradient(135deg, rgba(106, 169, 255, 0.26), rgba(126, 241, 211, 0.16));
+  --tab-active-border: rgba(106, 169, 255, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(106, 169, 255, 0.12);
+  --panel-glass: rgba(23, 27, 36, 0.9);
+  --panel-glass-strong: rgba(20, 24, 36, 0.78);
+  --menu-bg: rgba(23, 27, 36, 0.96);
+  --accent-glow: rgba(106, 169, 255, 0.12);
   --radius: 12px;
   --radius-sm: 8px;
   --sidebar-collapsed: 64px;
@@ -34,17 +54,36 @@ body.theme-light {
   --accent: #2b7bff;
   --accent-2: #12b886;
   --shadow: 0 12px 30px rgba(12, 18, 28, 0.12);
+  --bg-grad-1: rgba(43, 123, 255, 0.12);
+  --bg-grad-2: rgba(18, 184, 134, 0.12);
+  --container-grad-1: rgba(244, 246, 251, 0.6);
+  --container-grad-2: rgba(244, 246, 251, 0.95);
+  --hover: rgba(0, 0, 0, 0.05);
+  --hover-strong: rgba(0, 0, 0, 0.1);
+  --panel-soft: rgba(0, 0, 0, 0.03);
+  --panel-soft-hover: rgba(0, 0, 0, 0.06);
+  --chip-bg: rgba(26, 34, 48, 0.08);
+  --scrollbar-thumb: #c5ccda;
+  --scrollbar-thumb-hover: #b0b8c9;
+  --tab-active-bg: linear-gradient(135deg, rgba(43, 123, 255, 0.18), rgba(18, 184, 134, 0.12));
+  --tab-active-hover: linear-gradient(135deg, rgba(43, 123, 255, 0.26), rgba(18, 184, 134, 0.16));
+  --tab-active-border: rgba(43, 123, 255, 0.45);
+  --tab-active-shadow: inset 0 0 0 1px rgba(43, 123, 255, 0.12);
+  --panel-glass: rgba(255, 255, 255, 0.9);
+  --panel-glass-strong: rgba(255, 255, 255, 0.78);
+  --menu-bg: rgba(255, 255, 255, 0.96);
+  --accent-glow: rgba(43, 123, 255, 0.12);
 }
 
 body {
   font-family: "Sora", "IBM Plex Sans", "Segoe UI", sans-serif;
   overflow: hidden;
-  background: radial-gradient(1200px 800px at 10% -20%, rgba(106, 169, 255, 0.16), transparent 55%),
-    radial-gradient(900px 600px at 100% 0%, rgba(126, 241, 211, 0.12), transparent 55%),
+  background: radial-gradient(1200px 800px at 10% -20%, var(--bg-grad-1), transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, var(--bg-grad-2), transparent 55%),
     var(--bg);
   color: var(--text);
   letter-spacing: 0.2px;
-  transition: background 520ms ease, color 520ms ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease;
 }
 
 .browser-container,
@@ -58,14 +97,14 @@ body {
 .download-item,
 .menu-item,
 .menu-setting {
-  transition: background 520ms ease, color 520ms ease, border-color 520ms ease, box-shadow 520ms ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, box-shadow var(--theme-transition) ease;
 }
 
 .browser-container {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(180deg, rgba(15, 17, 21, 0.4), rgba(15, 17, 21, 0.9));
+  background: linear-gradient(180deg, var(--container-grad-1), var(--container-grad-2));
 }
 
 /* Sidebar Styles */
@@ -76,7 +115,7 @@ body {
   flex-direction: column;
   border-right: 1px solid var(--border);
   z-index: 100;
-  transition: width 0.2s ease, box-shadow 0.2s ease;
+  transition: width 0.2s ease, box-shadow 0.2s ease, background var(--theme-transition) ease, border-color var(--theme-transition) ease, color var(--theme-transition) ease;
   box-shadow: 6px 0 18px rgba(0, 0, 0, 0.25);
   animation: ui-rise 280ms ease;
 }
@@ -101,11 +140,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .sidebar-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover);
   border-color: var(--border);
   color: var(--text);
 }
@@ -130,12 +169,12 @@ body {
 }
 
 .tabs-container::-webkit-scrollbar-thumb {
-  background: #2a3140;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 .tabs-container::-webkit-scrollbar-thumb:hover {
-  background: #354158;
+  background: var(--scrollbar-thumb-hover);
 }
 
 .tab-item {
@@ -148,24 +187,24 @@ body {
   cursor: pointer;
   background: transparent;
   border: 1px solid transparent;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, border-color var(--theme-transition) ease, box-shadow var(--theme-transition) ease, transform 0.2s ease;
   min-height: 44px;
   overflow: hidden;
 }
 
 .tab-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--panel-soft);
   border-color: var(--border-soft);
 }
 
 .tab-item.active {
-  background: linear-gradient(135deg, rgba(106, 169, 255, 0.18), rgba(126, 241, 211, 0.12));
-  border-color: rgba(106, 169, 255, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(106, 169, 255, 0.12);
+  background: var(--tab-active-bg);
+  border-color: var(--tab-active-border);
+  box-shadow: var(--tab-active-shadow);
 }
 
 .tab-item.active:hover {
-  background: linear-gradient(135deg, rgba(106, 169, 255, 0.26), rgba(126, 241, 211, 0.16));
+  background: var(--tab-active-hover);
 }
 
 .tab-item.active::before {
@@ -189,7 +228,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--chip-bg);
 }
 
 .tab-favicon img {
@@ -269,7 +308,7 @@ body {
   display: flex;
   align-items: center;
   padding: 10px 14px;
-  background: rgba(23, 27, 36, 0.9);
+  background: var(--panel-glass);
   border-bottom: 1px solid var(--border);
   gap: 8px;
   position: relative;
@@ -294,7 +333,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .tool-btn.downloads-has-items {
@@ -314,7 +353,7 @@ body {
 }
 
 .tool-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover);
   border-color: var(--border);
   color: var(--text);
 }
@@ -340,7 +379,7 @@ body {
   position: relative;
   overflow: visible;
   border: 1px solid var(--border);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 0 0 1px var(--panel-soft);
 }
 
 .security-icon {
@@ -368,7 +407,7 @@ body {
 }
 
 .search-engine-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel-soft-hover);
 }
 .toolbar-right {
   display: flex;
@@ -378,7 +417,7 @@ body {
 .search-engine-dropdown {
   position: fixed;
   margin-top: 8px;
-  background: rgba(23, 27, 36, 0.96);
+  background: var(--menu-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -395,7 +434,7 @@ body {
 .app-menu {
   position: fixed;
   min-width: 200px;
-  background: rgba(23, 27, 36, 0.96);
+  background: var(--menu-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -407,10 +446,6 @@ body {
   visibility: hidden;
   transform: translateY(-6px) scale(0.98);
   transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
-}
-
-body.theme-light .app-menu {
-  background: rgba(255, 255, 255, 0.96);
 }
 
 .app-menu.active {
@@ -430,7 +465,7 @@ body.theme-light .app-menu {
 }
 
 .menu-item {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--panel-soft);
   border: 1px solid var(--border-soft);
   border-radius: 10px;
   padding: 10px 12px;
@@ -442,8 +477,8 @@ body.theme-light .app-menu {
 }
 
 .menu-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(106, 169, 255, 0.5);
+  background: var(--panel-soft-hover);
+  border-color: var(--tab-active-border);
 }
 
 .menu-panel-header {
@@ -473,8 +508,8 @@ body.theme-light .app-menu {
 
 .menu-back:hover {
   color: var(--text);
-  border-color: rgba(106, 169, 255, 0.6);
-  background: rgba(106, 169, 255, 0.12);
+  border-color: var(--tab-active-border);
+  background: var(--accent-glow);
 }
 
 .menu-setting {
@@ -485,7 +520,7 @@ body.theme-light .app-menu {
   padding: 10px 12px;
   border: 1px solid var(--border-soft);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--panel-soft);
 }
 
 .menu-setting-label {
@@ -506,8 +541,8 @@ body.theme-light .app-menu {
 
 .menu-toggle:hover {
   color: var(--text);
-  border-color: rgba(106, 169, 255, 0.6);
-  background: rgba(106, 169, 255, 0.12);
+  border-color: var(--tab-active-border);
+  background: var(--accent-glow);
 }
 
 .search-engine-dropdown.active {
@@ -528,11 +563,11 @@ body.theme-light .app-menu {
 }
 
 .search-engine-option:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover);
 }
 
 .search-engine-option.selected {
-  background: rgba(106, 169, 255, 0.18);
+  background: var(--accent-glow);
 }
 
 .engine-icon {
@@ -597,7 +632,7 @@ body.theme-light .app-menu {
   right: 16px;
   top: 62px;
   width: 320px;
-  background: rgba(20, 24, 36, 0.78);
+  background: var(--panel-glass-strong);
   backdrop-filter: blur(14px);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -681,7 +716,7 @@ body.theme-light .app-menu {
 }
 
 .download-item {
-  background: rgba(27, 33, 48, 0.9);
+  background: var(--panel-glass);
   border: 1px solid var(--border-soft);
   border-radius: 10px;
   padding: 8px 10px;
@@ -703,8 +738,8 @@ body.theme-light .app-menu {
 }
 
 .download-item.history {
-  background: rgba(23, 27, 36, 0.78);
-  border-color: rgba(38, 44, 58, 0.6);
+  background: var(--panel-glass-strong);
+  border-color: var(--border);
 }
 
 .download-meta {
@@ -732,7 +767,7 @@ body.theme-light .app-menu {
 
 .download-progress {
   height: 5px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--panel-soft);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -762,8 +797,8 @@ body.theme-light .app-menu {
 
 .download-action:hover {
   color: var(--text);
-  border-color: rgba(106, 169, 255, 0.6);
-  background: rgba(106, 169, 255, 0.12);
+  border-color: var(--tab-active-border);
+  background: var(--accent-glow);
 }
 
 .download-action.ghost {
