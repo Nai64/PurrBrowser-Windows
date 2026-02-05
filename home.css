@@ -52,11 +52,11 @@ body.home-ready {
 .home-orb {
   position: absolute;
   border-radius: 999px;
-  filter: blur(18px);
-  opacity: 0.32;
+  filter: blur(28px);
+  opacity: 0.3;
   background: radial-gradient(circle at 30% 30%, var(--home-accent), transparent 65%);
   mix-blend-mode: screen;
-  animation: orb-float 14s ease-in-out infinite;
+  animation: orb-float 20s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -65,7 +65,7 @@ body.home-ready {
   height: 220px;
   top: -40px;
   right: 8%;
-  animation-duration: 16s;
+  animation-duration: 22s;
 }
 
 .home-orb.orb-b {
@@ -74,7 +74,7 @@ body.home-ready {
   bottom: -120px;
   left: 6%;
   background: radial-gradient(circle at 40% 40%, var(--home-accent-2), transparent 70%);
-  animation-duration: 20s;
+  animation-duration: 26s;
 }
 
 .home-orb.orb-c {
@@ -83,7 +83,7 @@ body.home-ready {
   top: 40%;
   right: -60px;
   background: radial-gradient(circle at 50% 50%, var(--home-accent-2), transparent 70%);
-  animation-duration: 18s;
+  animation-duration: 24s;
 }
 
 @keyframes orb-float {
@@ -91,7 +91,7 @@ body.home-ready {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(12px, -18px, 0) scale(1.06);
+    transform: translate3d(24px, -28px, 0) scale(1.12);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(1);
