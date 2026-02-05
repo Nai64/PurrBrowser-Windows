@@ -515,4 +515,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Initialize on load
-window.addEventListener('DOMContentLoaded', init);
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
