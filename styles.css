@@ -508,6 +508,12 @@ body {
   max-height: 240px;
   overflow-y: auto;
   padding-right: 4px;
+  scrollbar-width: none;
+}
+
+.download-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .download-history {
