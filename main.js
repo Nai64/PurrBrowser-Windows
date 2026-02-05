@@ -25,6 +25,20 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log('[UI] did-finish-load');
+  });
+
+  mainWindow.webContents.on('console-message', (event, level, message) => {
+    console.log(`[Renderer:${level}] ${message}`);
+  });
+
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type === 'mouseDown' && input.button === 'left') {
+      console.log('[UI] mouseDown');
+    }
+  });
+
   // Open DevTools in development
   if (process.argv.includes('--debug')) {
     mainWindow.webContents.openDevTools();

@@ -69,6 +69,11 @@ const tabsContainer = document.getElementById('tabs-container');
 const webviewContainer = document.getElementById('webview-container');
 const { ipcRenderer } = require('electron');
 
+ipcRenderer.send('ui-debug', 'renderer loaded');
+window.addEventListener('click', () => {
+  ipcRenderer.send('ui-debug', 'renderer click');
+});
+
 const urlInput = document.getElementById('url-input');
 const newTabBtn = document.getElementById('new-tab-btn');
 const securityIcon = document.getElementById('security-icon');
@@ -232,8 +237,14 @@ function createWebview(tab) {
   webview.id = `webview-${tab.id}`;
   webview.src = tab.url;
   webview.dataset.tabId = tab.id;
+  webview.dataset.domReady = 'false';
   
   // Webview event listeners
+  webview.addEventListener('dom-ready', () => {
+    webview.dataset.domReady = 'true';
+    updateNavigationButtons();
+  });
+
   webview.addEventListener('did-start-loading', () => {
     updateTabLoading(tab.id, true);
   });
@@ -334,6 +345,10 @@ function getTab(tabId) {
 function getActiveWebview() {
   if (activeTabId === null) return null;
   return document.getElementById(`webview-${activeTabId}`);
+}
+
+function isWebviewReady(webview) {
+  return webview && webview.dataset.domReady === 'true';
 }
 
 // Update tab loading state
@@ -451,21 +466,21 @@ function navigateToUrl() {
 
 function navigateBack() {
   const webview = getActiveWebview();
-  if (webview && webview.canGoBack()) {
+  if (isWebviewReady(webview) && webview.canGoBack()) {
     webview.goBack();
   }
 }
 
 function navigateForward() {
   const webview = getActiveWebview();
-  if (webview && webview.canGoForward()) {
+  if (isWebviewReady(webview) && webview.canGoForward()) {
     webview.goForward();
   }
 }
 
 function reloadPage() {
   const webview = getActiveWebview();
-  if (webview) {
+  if (isWebviewReady(webview)) {
     webview.reload();
   }
 }
@@ -480,7 +495,13 @@ function navigateToHome() {
 // Update navigation button states
 function updateNavigationButtons() {
   const webview = getActiveWebview();
-  if (!webview || !backBtn || !forwardBtn) return;
+  if (!backBtn || !forwardBtn) return;
+  
+  if (!isWebviewReady(webview)) {
+    backBtn.disabled = true;
+    forwardBtn.disabled = true;
+    return;
+  }
   
   backBtn.disabled = !webview.canGoBack();
   forwardBtn.disabled = !webview.canGoForward();
