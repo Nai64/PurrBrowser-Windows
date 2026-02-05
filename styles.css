@@ -264,7 +264,7 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: all 0.2s;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, opacity 0.2s ease, transform 0.2s ease;
   margin-left: 4px;
 }
 
@@ -273,7 +273,7 @@ body {
 }
 
 .tab-close:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--hover-strong);
   color: var(--text);
 }
 
@@ -402,7 +402,7 @@ body {
   justify-content: center;
   padding: 4px 6px;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, transform 0.2s ease;
   font-size: 16px;
 }
 
@@ -473,7 +473,7 @@ body {
   color: var(--text);
   font-size: 13px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .menu-item:hover {
@@ -503,7 +503,7 @@ body {
   padding: 4px 10px;
   font-size: 11px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .menu-back:hover {
@@ -536,7 +536,7 @@ body {
   border-radius: 999px;
   font-size: 11px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .menu-toggle:hover {
@@ -558,7 +558,7 @@ body {
   gap: 12px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease;
   color: var(--text);
 }
 
@@ -606,11 +606,11 @@ body {
   justify-content: center;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .go-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel-soft-hover);
   color: var(--text);
 }
 
@@ -675,13 +675,13 @@ body {
   padding: 4px 12px;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .shelf-btn:hover {
   color: var(--text);
-  border-color: rgba(106, 169, 255, 0.6);
-  background: rgba(106, 169, 255, 0.12);
+  border-color: var(--tab-active-border);
+  background: var(--accent-glow);
 }
 
 .download-list {
@@ -724,7 +724,7 @@ body {
   gap: 8px;
   animation: shelf-pop 220ms ease;
   transform-origin: top right;
-  transition: opacity 180ms ease, transform 180ms ease, max-height 220ms ease, margin 220ms ease, padding 220ms ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, opacity 180ms ease, transform 180ms ease, max-height 220ms ease, margin 220ms ease, padding 220ms ease;
   max-height: 140px;
 }
 
@@ -792,7 +792,7 @@ body {
   border-radius: 999px;
   font-size: 11px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
 }
 
 .download-action:hover {
@@ -888,13 +888,13 @@ webview.active {
   font-size: 16px;
   color: var(--text);
   outline: none;
-  transition: all 0.3s;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, box-shadow var(--theme-transition) ease;
 }
 
 .new-tab-search:focus {
   background: var(--panel-2);
-  border-color: rgba(106, 169, 255, 0.6);
-  box-shadow: 0 0 0 3px rgba(106, 169, 255, 0.15);
+  border-color: var(--tab-active-border);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .quick-links {
