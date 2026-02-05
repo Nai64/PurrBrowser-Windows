@@ -151,7 +151,7 @@ body.home-ready {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
-  min-height: 74px;
+  min-height: 73px;
 }
 
 .kpi-pair {
