@@ -80,11 +80,14 @@ const securityIcon = document.getElementById('security-icon');
 const searchEngineBtn = document.getElementById('search-engine-btn');
 const searchEngineIcon = document.getElementById('search-engine-icon');
 const searchEngineDropdown = document.getElementById('search-engine-dropdown');
+const downloadShelf = document.getElementById('download-shelf');
+const downloadList = document.getElementById('download-list');
 const toolbar = document.querySelector('.toolbar');
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
 const homeBtn = toolbar ? toolbar.querySelector('[data-action="home"]') : null;
+const downloadsById = new Map();
 
 // Initialize browser
 function init() {
@@ -96,6 +99,8 @@ function init() {
   
   // Setup event listeners
   setupEventListeners();
+
+  setupDownloadShelf();
 }
 
 // Setup all event listeners
@@ -167,6 +172,151 @@ function setupEventListeners() {
         setSearchEngine(engine);
         searchEngineDropdown.classList.remove('active');
       });
+    });
+  }
+}
+
+function setupDownloadShelf() {
+  if (!downloadShelf || !downloadList) return;
+
+  ipcRenderer.on('download-item', (event, payload) => {
+    updateDownloadItem(payload);
+  });
+
+  downloadShelf.addEventListener('click', (event) => {
+    const actionButton = event.target.closest('[data-action]');
+    if (!actionButton) return;
+
+    const action = actionButton.dataset.action;
+    if (action === 'clear-downloads') {
+      downloadsById.clear();
+      downloadList.innerHTML = '';
+      downloadShelf.classList.remove('active');
+      return;
+    }
+
+    const itemElement = actionButton.closest('.download-item');
+    if (!itemElement) return;
+
+    const downloadId = itemElement.dataset.downloadId;
+    const download = downloadsById.get(downloadId);
+    if (!download) return;
+
+    if (action === 'open-download') {
+      ipcRenderer.send('download-open', { path: download.savePath });
+    }
+
+    if (action === 'show-download') {
+      ipcRenderer.send('download-show', { path: download.savePath });
+    }
+
+    if (action === 'remove-download') {
+      downloadsById.delete(downloadId);
+      itemElement.remove();
+      if (downloadsById.size === 0) {
+        downloadShelf.classList.remove('active');
+      }
+    }
+  });
+}
+
+function updateDownloadItem(payload) {
+  if (!downloadShelf || !downloadList) return;
+
+  const {
+    id,
+    filename,
+    receivedBytes,
+    totalBytes,
+    state,
+    savePath
+  } = payload;
+
+  let item = downloadsById.get(id);
+  if (!item) {
+    item = {
+      id,
+      filename,
+      receivedBytes: 0,
+      totalBytes: totalBytes || 0,
+      state,
+      savePath
+    };
+    downloadsById.set(id, item);
+    downloadList.prepend(createDownloadElement(item));
+  }
+
+  item.filename = filename;
+  item.receivedBytes = receivedBytes || 0;
+  item.totalBytes = totalBytes || item.totalBytes;
+  item.state = state;
+  item.savePath = savePath;
+
+  renderDownloadItem(item);
+
+  if (downloadsById.size > 0) {
+    downloadShelf.classList.add('active');
+  }
+}
+
+function createDownloadElement(item) {
+  const element = document.createElement('div');
+  element.className = 'download-item';
+  element.dataset.downloadId = item.id;
+  element.innerHTML = `
+    <div class="download-meta">
+      <div class="download-name"></div>
+      <div class="download-status"></div>
+    </div>
+    <div class="download-progress">
+      <div class="download-progress-bar"></div>
+    </div>
+    <div class="download-actions">
+      <button class="download-action" data-action="open-download">Open</button>
+      <button class="download-action ghost" data-action="show-download">Show</button>
+      <button class="download-action ghost" data-action="remove-download">Clear</button>
+    </div>
+  `;
+  return element;
+}
+
+function renderDownloadItem(item) {
+  const element = downloadList.querySelector(`[data-download-id="${item.id}"]`);
+  if (!element) return;
+
+  const nameEl = element.querySelector('.download-name');
+  const statusEl = element.querySelector('.download-status');
+  const progressEl = element.querySelector('.download-progress-bar');
+  const actions = element.querySelectorAll('.download-action');
+
+  nameEl.textContent = item.filename || 'Download';
+
+  const total = item.totalBytes || 0;
+  const received = item.receivedBytes || 0;
+  const percent = total > 0 ? Math.min(100, Math.round((received / total) * 100)) : 0;
+
+  if (item.state === 'completed') {
+    statusEl.textContent = 'Done';
+    progressEl.style.width = '100%';
+    actions.forEach((button) => button.classList.remove('download-hidden'));
+  } else if (item.state === 'failed') {
+    statusEl.textContent = 'Failed';
+    progressEl.style.width = `${percent}%`;
+    actions.forEach((button) => button.classList.remove('download-hidden'));
+  } else if (item.state === 'interrupted') {
+    statusEl.textContent = 'Paused';
+    progressEl.style.width = `${percent}%`;
+    actions.forEach((button) => button.classList.remove('download-hidden'));
+  } else {
+    statusEl.textContent = total > 0 ? `Downloading ${percent}%` : 'Downloading';
+    progressEl.style.width = `${percent}%`;
+    actions.forEach((button) => {
+      const action = button.dataset.action;
+      if (action === 'remove-download') {
+        button.classList.remove('download-hidden');
+      } else {
+        button.classList.add('download-hidden');
+      }
     });
   }
 }
