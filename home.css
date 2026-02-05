@@ -41,11 +41,53 @@ body.home-ready {
   transition: background 520ms ease, color 520ms ease, opacity 360ms ease, transform 360ms ease;
 }
 
+.home-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(0px);
+  opacity: 0.35;
+  background: radial-gradient(circle at 30% 30%, var(--home-accent), transparent 65%);
+  mix-blend-mode: screen;
+}
+
+.home-orb.orb-a {
+  width: 260px;
+  height: 260px;
+  top: -40px;
+  right: 8%;
+}
+
+.home-orb.orb-b {
+  width: 320px;
+  height: 320px;
+  bottom: -120px;
+  left: 6%;
+  background: radial-gradient(circle at 40% 40%, var(--home-accent-2), transparent 70%);
+}
+
+.home-orb.orb-c {
+  width: 180px;
+  height: 180px;
+  top: 40%;
+  right: -60px;
+  background: radial-gradient(circle at 50% 50%, var(--home-accent-2), transparent 70%);
+}
+
 .home-shell {
   max-width: 1100px;
   margin: 0 auto;
   display: grid;
   gap: 28px;
+  position: relative;
+  z-index: 1;
 }
 
 .home-header {
@@ -85,6 +127,43 @@ body.home-ready {
   display: grid;
   gap: 16px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.home-hero {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(320px, 2fr) minmax(240px, 1fr);
+}
+
+.home-kpis {
+  display: grid;
+  gap: 12px;
+}
+
+.home-kpi {
+  background: var(--home-panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.kpi-label {
+  font-size: 12px;
+  color: var(--home-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.kpi-meta {
+  font-size: 12px;
+  color: var(--home-text-muted);
 }
 
 .home-search-title {
@@ -152,6 +231,42 @@ body.home-ready {
   gap: 12px;
 }
 
+.home-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.home-mini-list {
+  display: grid;
+  gap: 8px;
+}
+
+.home-mini {
+  font-size: 12px;
+  color: var(--home-text-muted);
+}
+
+.home-sessions {
+  display: grid;
+  gap: 10px;
+}
+
+.home-session {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--home-panel-2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 13px;
+}
+
+.home-session-meta {
+  color: var(--home-text-muted);
+  font-size: 12px;
+}
+
 .home-panel-title {
   font-size: 14px;
   font-weight: 600;
@@ -195,5 +310,9 @@ body.home-ready {
 
   .home-clock {
     text-align: left;
+  }
+
+  .home-hero {
+    grid-template-columns: 1fr;
   }
 }

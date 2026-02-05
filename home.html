@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="home.css">
 </head>
 <body>
+  <div class="home-bg">
+    <span class="home-orb orb-a"></span>
+    <span class="home-orb orb-b"></span>
+    <span class="home-orb orb-c"></span>
+  </div>
   <div class="home-shell">
     <header class="home-header">
       <div class="home-title">Welcome to Purr.</div>
@@ -19,13 +24,32 @@
       </div>
     </header>
 
-    <section class="home-search-card">
-      <div class="home-search-title">Search the web</div>
-      <form class="home-search" id="home-search-form">
-        <input class="home-search-input" id="home-search-input" type="text" placeholder="Search" autocomplete="off">
-        <button class="home-search-btn" type="submit">Go</button>
-      </form>
-      <div class="home-search-meta" id="home-search-meta">Using current search engine</div>
+    <section class="home-hero">
+      <div class="home-search-card">
+        <div class="home-search-title">Search the web</div>
+        <form class="home-search" id="home-search-form">
+          <input class="home-search-input" id="home-search-input" type="text" placeholder="Search" autocomplete="off">
+          <button class="home-search-btn" type="submit">Go</button>
+        </form>
+        <div class="home-search-meta" id="home-search-meta">Using current search engine</div>
+      </div>
+      <div class="home-kpis">
+        <div class="home-kpi">
+          <div class="kpi-label">Focus session</div>
+          <div class="kpi-value">52 min</div>
+          <div class="kpi-meta">Keep the streak alive.</div>
+        </div>
+        <div class="home-kpi">
+          <div class="kpi-label">Tabs open</div>
+          <div class="kpi-value">6</div>
+          <div class="kpi-meta">Trim the noise.</div>
+        </div>
+        <div class="home-kpi">
+          <div class="kpi-label">Downloads</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-meta">Last 24 hours.</div>
+        </div>
+      </div>
     </section>
 
     <section class="home-grid">
@@ -41,9 +65,32 @@
         </div>
       </div>
       <div class="home-panel">
-        <div class="home-panel-title">Focus</div>
+        <div class="home-panel-title">Session Notes</div>
         <div class="home-panel-text">
-          Pin what matters and keep your workspace clean. Themes, downloads, and tabs are all one click away.
+          Start every session with a clean slate. Theme, downloads, and settings are all one click away.
+        </div>
+        <div class="home-divider"></div>
+        <div class="home-mini-list">
+          <div class="home-mini">Resume last workspace</div>
+          <div class="home-mini">Review downloads</div>
+          <div class="home-mini">Tweak search engine</div>
+        </div>
+      </div>
+      <div class="home-panel">
+        <div class="home-panel-title">Recent Sessions</div>
+        <div class="home-sessions">
+          <div class="home-session">
+            <span>Project research</span>
+            <span class="home-session-meta">12 tabs</span>
+          </div>
+          <div class="home-session">
+            <span>Design inspo</span>
+            <span class="home-session-meta">8 tabs</span>
+          </div>
+          <div class="home-session">
+            <span>Dev docs</span>
+            <span class="home-session-meta">5 tabs</span>
+          </div>
         </div>
       </div>
     </section>
