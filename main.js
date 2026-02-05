@@ -32,6 +32,10 @@ function createWindow() {
   });
 
   mainWindow.webContents.on('console-message', (event, level, message) => {
+    const isAbortNoise = message.includes('ERR_ABORTED') && message.includes('GUEST_VIEW_MANAGER_CALL');
+    if (isAbortNoise) {
+      return;
+    }
     console.log(`[Renderer:${level}] ${message}`);
   });
 
