@@ -3,8 +3,49 @@ let tabs = [];
 let activeTabId = null;
 let tabIdCounter = 0;
 
-// Default home page
-const HOME_URL = 'https://www.google.com';
+// Search engines configuration
+const SEARCH_ENGINES = {
+  duckduckgo: {
+    name: 'DuckDuckGo',
+    icon: '🦆',
+    searchUrl: 'https://duckduckgo.com/?q=',
+    homeUrl: 'https://duckduckgo.com'
+  },
+  google: {
+    name: 'Google',
+    icon: '🔍',
+    searchUrl: 'https://www.google.com/search?q=',
+    homeUrl: 'https://www.google.com'
+  },
+  bing: {
+    name: 'Bing',
+    icon: '🅱️',
+    searchUrl: 'https://www.bing.com/search?q=',
+    homeUrl: 'https://www.bing.com'
+  },
+  yahoo: {
+    name: 'Yahoo',
+    icon: 'Ⓨ',
+    searchUrl: 'https://search.yahoo.com/search?p=',
+    homeUrl: 'https://www.yahoo.com'
+  },
+  brave: {
+    name: 'Brave',
+    icon: '🦁',
+    searchUrl: 'https://search.brave.com/search?q=',
+    homeUrl: 'https://search.brave.com'
+  },
+  ecosia: {
+    name: 'Ecosia',
+    icon: '🌱',
+    searchUrl: 'https://www.ecosia.org/search?q=',
+    homeUrl: 'https://www.ecosia.org'
+  }
+};
+
+// Default search engine (DuckDuckGo)
+let currentSearchEngine = localStorage.getItem('searchEngine') || 'duckduckgo';
+const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 
 // DOM elements
 const tabsContainer = document.getElementById('tabs-container');
@@ -17,9 +58,15 @@ const homeBtn = document.getElementById('home-btn');
 const goBtn = document.getElementById('go-btn');
 const newTabBtn = document.getElementById('new-tab-btn');
 const securityIcon = document.getElementById('security-icon');
+const searchEngineBtn = document.getElementById('search-engine-btn');
+const searchEngineIcon = document.getElementById('search-engine-icon');
+const searchEngineDropdown = document.getElementById('search-engine-dropdown');
 
 // Initialize browser
 function init() {
+  // Set initial search engine
+  updateSearchEngineUI();
+  
   // Create first tab
   createTab(HOME_URL);
   
@@ -29,7 +76,7 @@ function init() {
 
 // Setup all event listeners
 function setupEventListeners() {
-  newTabBtn.addEventListener('click', () => createTab(HOME_URL));
+  newTabBtn.addEventListener('click', () => createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl));
   backBtn.addEventListener('click', () => navigateBack());
   forwardBtn.addEventListener('click', () => navigateForward());
   refreshBtn.addEventListener('click', () => reloadPage());
@@ -44,6 +91,27 @@ function setupEventListeners() {
   
   urlInput.addEventListener('focus', () => {
     urlInput.select();
+  });
+  
+  // Search engine selector
+  searchEngineBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    searchEngineDropdown.classList.toggle('active');
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', () => {
+    searchEngineDropdown.classList.remove('active');
+  });
+  
+  // Search engine options
+  document.querySelectorAll('.search-engine-option').forEach(option => {
+    option.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const engine = option.dataset.engine;
+      setSearchEngine(engine);
+      searchEngineDropdown.classList.remove('active');
+    });
   });
 }
 
@@ -276,6 +344,27 @@ function updateTabUrl(tabId, url) {
   }
 }
 
+// Search engine management
+function setSearchEngine(engineKey) {
+  if (SEARCH_ENGINES[engineKey]) {
+    currentSearchEngine = engineKey;
+    localStorage.setItem('searchEngine', engineKey);
+    updateSearchEngineUI();
+  }
+}
+
+function updateSearchEngineUI() {
+  const engine = SEARCH_ENGINES[currentSearchEngine];
+  searchEngineIcon.textContent = engine.icon;
+  searchEngineBtn.title = `Search with ${engine.name}`;
+  urlInput.placeholder = `Search with ${engine.name} or enter address`;
+  
+  // Update selected state in dropdown
+  document.querySelectorAll('.search-engine-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.engine === currentSearchEngine);
+  });
+}
+
 // Navigation functions
 function navigateToUrl() {
   const webview = getActiveWebview();
@@ -287,8 +376,9 @@ function navigateToUrl() {
   
   // Check if it's a search query or URL
   if (!url.includes('.') && !url.includes('localhost') && !url.startsWith('http')) {
-    // Search query
-    url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+    // Search query - use selected search engine
+    const engine = SEARCH_ENGINES[currentSearchEngine];
+    url = engine.searchUrl + encodeURIComponent(url);
   } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
     // Add protocol
     url = 'https://' + url;
@@ -321,7 +411,7 @@ function reloadPage() {
 function navigateToHome() {
   const webview = getActiveWebview();
   if (webview) {
-    webview.src = HOME_URL;
+    webview.src = SEARCH_ENGINES[currentSearchEngine].homeUrl;
   }
 }
 
