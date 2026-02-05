@@ -301,6 +301,7 @@ body {
   flex: 1;
   position: relative;
   background: #1e1e1e;
+  overflow: hidden;
 }
 
 webview {
@@ -313,7 +314,7 @@ webview {
 }
 
 webview.active {
-  display: block;
+  display: flex;
 }
 
 /* Loading indicator */
