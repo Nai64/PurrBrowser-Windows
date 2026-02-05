@@ -183,9 +183,10 @@ body.home-ready {
   background: var(--home-panel-2);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 10px 14px;
+  padding: 8px 14px;
   color: var(--home-text);
   font-size: 14px;
+  line-height: 1.2;
   outline: none;
   transition: border-color 260ms ease, box-shadow 260ms ease;
 }
