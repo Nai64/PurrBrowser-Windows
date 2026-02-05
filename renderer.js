@@ -68,16 +68,16 @@ const HOME_URL = SEARCH_ENGINES[currentSearchEngine].homeUrl;
 const tabsContainer = document.getElementById('tabs-container');
 const webviewContainer = document.getElementById('webview-container');
 const urlInput = document.getElementById('url-input');
-const backBtn = document.getElementById('back-btn');
-const forwardBtn = document.getElementById('forward-btn');
-const refreshBtn = document.getElementById('refresh-btn');
-const homeBtn = document.getElementById('home-btn');
-const goBtn = document.getElementById('go-btn');
 const newTabBtn = document.getElementById('new-tab-btn');
 const securityIcon = document.getElementById('security-icon');
 const searchEngineBtn = document.getElementById('search-engine-btn');
 const searchEngineIcon = document.getElementById('search-engine-icon');
 const searchEngineDropdown = document.getElementById('search-engine-dropdown');
+const toolbar = document.querySelector('.toolbar');
+const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
+const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
+const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
+const homeBtn = toolbar ? toolbar.querySelector('[data-action="home"]') : null;
 
 // Initialize browser
 function init() {
@@ -94,11 +94,6 @@ function init() {
 // Setup all event listeners
 function setupEventListeners() {
   newTabBtn.addEventListener('click', () => createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl));
-  backBtn.addEventListener('click', () => navigateBack());
-  forwardBtn.addEventListener('click', () => navigateForward());
-  refreshBtn.addEventListener('click', () => reloadPage());
-  homeBtn.addEventListener('click', () => navigateToHome());
-  goBtn.addEventListener('click', () => navigateToUrl());
   
   urlInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -110,46 +105,59 @@ function setupEventListeners() {
     urlInput.select();
   });
   
+  // Toolbar action handling (robust event delegation)
+  if (toolbar) {
+    toolbar.addEventListener('click', (e) => {
+      const actionButton = e.target.closest('[data-action]');
+      if (!actionButton) return;
+      
+      const action = actionButton.dataset.action;
+      if (!action) return;
+      
+      switch (action) {
+        case 'back':
+          navigateBack();
+          break;
+        case 'forward':
+          navigateForward();
+          break;
+        case 'refresh':
+          reloadPage();
+          break;
+        case 'home':
+          navigateToHome();
+          break;
+        case 'go':
+          navigateToUrl();
+          break;
+        case 'engine':
+          toggleSearchEngineDropdown();
+          break;
+        case 'menu':
+          // Placeholder for future menu actions
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  
   // Search engine selector
   if (searchEngineBtn && searchEngineDropdown) {
-    console.log('Setting up search engine selector...');
-    
-    searchEngineBtn.addEventListener('click', (e) => {
-      console.log('Search engine button clicked!');
-      e.stopPropagation();
-      const isActive = searchEngineDropdown.classList.toggle('active');
-      console.log('Dropdown active:', isActive);
-      
-      if (isActive) {
-        // Position dropdown below button
-        const rect = searchEngineBtn.getBoundingClientRect();
-        searchEngineDropdown.style.top = `${rect.bottom + 8}px`;
-        searchEngineDropdown.style.left = `${rect.left}px`;
-        console.log('Dropdown positioned at:', rect.bottom + 8, rect.left);
+    document.addEventListener('click', (e) => {
+      const clickedInside = searchEngineDropdown.contains(e.target) || searchEngineBtn.contains(e.target);
+      if (!clickedInside) {
+        searchEngineDropdown.classList.remove('active');
       }
     });
     
-    // Close dropdown when clicking outside
-    document.addEventListener('click', () => {
-      searchEngineDropdown.classList.remove('active');
-    });
-    
-    // Search engine options
     document.querySelectorAll('.search-engine-option').forEach(option => {
       option.addEventListener('click', (e) => {
-        console.log('Search engine option clicked:', option.dataset.engine);
         e.stopPropagation();
         const engine = option.dataset.engine;
         setSearchEngine(engine);
         searchEngineDropdown.classList.remove('active');
       });
-    });
-    
-    console.log('Search engine selector setup complete');
-  } else {
-    console.error('Search engine elements not found!', {
-      button: searchEngineBtn,
-      dropdown: searchEngineDropdown
     });
   }
 }
@@ -404,6 +412,17 @@ function updateSearchEngineUI() {
   });
 }
 
+function toggleSearchEngineDropdown() {
+  if (!searchEngineBtn || !searchEngineDropdown) return;
+  
+  const isActive = searchEngineDropdown.classList.toggle('active');
+  if (isActive) {
+    const rect = searchEngineBtn.getBoundingClientRect();
+    searchEngineDropdown.style.top = `${rect.bottom + 8}px`;
+    searchEngineDropdown.style.left = `${rect.left}px`;
+  }
+}
+
 // Navigation functions
 function navigateToUrl() {
   const webview = getActiveWebview();
@@ -457,7 +476,7 @@ function navigateToHome() {
 // Update navigation button states
 function updateNavigationButtons() {
   const webview = getActiveWebview();
-  if (!webview) return;
+  if (!webview || !backBtn || !forwardBtn) return;
   
   backBtn.disabled = !webview.canGoBack();
   forwardBtn.disabled = !webview.canGoForward();
