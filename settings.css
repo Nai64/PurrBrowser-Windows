@@ -84,7 +84,7 @@ body {
 }
 
 body {
-  font-family: "Sora", "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-family: "Manrope", "IBM Plex Sans", "Segoe UI", sans-serif;
   background: radial-gradient(1000px 700px at 10% -10%, rgba(106, 169, 255, 0.2), transparent 55%),
     radial-gradient(900px 600px at 100% 0%, rgba(126, 241, 211, 0.18), transparent 55%),
     var(--bg);

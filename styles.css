@@ -184,7 +184,7 @@ body.theme-sunset {
 }
 
 body {
-  font-family: "Sora", "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-family: "Manrope", "IBM Plex Sans", "Segoe UI", sans-serif;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
