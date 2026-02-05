@@ -142,31 +142,38 @@ body.home-ready {
   gap: 12px;
 }
 
-.home-kpi-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.kpi-chip {
+.kpi-bar {
   background: var(--home-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 10px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
+  padding: 10px 16px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  min-height: 56px;
 }
 
-.kpi-chip .kpi-label {
+.kpi-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-divider {
+  height: 22px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  justify-self: center;
+}
+
+.kpi-bar .kpi-label {
   font-size: 11px;
   color: var(--home-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.kpi-chip .kpi-value {
+.kpi-bar .kpi-value {
   font-size: 16px;
   font-weight: 600;
 }
