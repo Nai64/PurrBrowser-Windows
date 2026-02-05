@@ -275,6 +275,9 @@ function updateDownloadItem(payload) {
     };
     downloadsById.set(id, item);
     downloadList.prepend(createDownloadElement(item));
+    if (state === 'progress') {
+      toggleDownloadShelf(true);
+    }
   }
 
   item.filename = filename;
