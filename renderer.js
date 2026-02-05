@@ -85,6 +85,10 @@ const downloadList = document.getElementById('download-list');
 const downloadHistoryList = document.getElementById('download-history-list');
 const toolbar = document.querySelector('.toolbar');
 const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloads"]') : null;
+const menuToggleBtn = toolbar ? toolbar.querySelector('[data-action="menu"]') : null;
+const appMenu = document.getElementById('app-menu');
+const menuPanels = appMenu ? appMenu.querySelectorAll('.menu-panel') : [];
+const themeToggleBtn = appMenu ? appMenu.querySelector('[data-action="toggle-theme"]') : null;
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
@@ -94,11 +98,16 @@ const dismissedDownloadIds = new Set();
 const DOWNLOAD_HISTORY_KEY = 'downloadHistory';
 const DOWNLOAD_HISTORY_LIMIT = 40;
 let downloadHistory = [];
+const THEME_KEY = 'theme';
+let currentTheme = safeGetStorage(THEME_KEY, 'dark');
 
 // Initialize browser
 function init() {
   // Set initial search engine
   updateSearchEngineUI();
+
+  applyTheme(currentTheme);
+  updateThemeToggle();
   
   // Create first tab
   createTab(SEARCH_ENGINES[currentSearchEngine].homeUrl);
@@ -155,7 +164,7 @@ function setupEventListeners() {
           toggleSearchEngineDropdown();
           break;
         case 'menu':
-          // Placeholder for future menu actions
+          toggleAppMenu();
           break;
         case 'downloads':
           toggleDownloadShelf();
@@ -182,6 +191,44 @@ function setupEventListeners() {
         setSearchEngine(engine);
         searchEngineDropdown.classList.remove('active');
       });
+    });
+  }
+
+  if (appMenu && menuToggleBtn) {
+    document.addEventListener('click', (e) => {
+      const clickedInside = appMenu.contains(e.target) || menuToggleBtn.contains(e.target);
+      if (!clickedInside) {
+        closeAppMenu();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (appMenu.classList.contains('active')) {
+        positionAppMenu();
+      }
+    });
+
+    appMenu.addEventListener('click', (event) => {
+      const actionButton = event.target.closest('[data-action]');
+      if (!actionButton) return;
+
+      const action = actionButton.dataset.action;
+      if (action === 'menu-history') {
+        openDownloadHistory();
+        closeAppMenu();
+      }
+
+      if (action === 'menu-settings') {
+        setMenuPanel('settings');
+      }
+
+      if (action === 'menu-back') {
+        setMenuPanel('main');
+      }
+
+      if (action === 'toggle-theme') {
+        toggleTheme();
+      }
     });
   }
 }
@@ -305,9 +352,68 @@ function toggleDownloadShelf(forceState) {
   downloadShelf.classList.toggle('active', nextState);
 }
 
+function toggleAppMenu(forceState) {
+  if (!appMenu || !menuToggleBtn) return;
+
+  const nextState = typeof forceState === 'boolean'
+    ? forceState
+    : !appMenu.classList.contains('active');
+
+  if (nextState) {
+    setMenuPanel('main');
+    positionAppMenu();
+  }
+
+  appMenu.classList.toggle('active', nextState);
+}
+
+function closeAppMenu() {
+  if (!appMenu) return;
+  appMenu.classList.remove('active');
+}
+
+function positionAppMenu() {
+  if (!appMenu || !menuToggleBtn) return;
+  const rect = menuToggleBtn.getBoundingClientRect();
+  const rightOffset = Math.max(8, window.innerWidth - rect.right);
+  appMenu.style.top = `${rect.bottom + 8}px`;
+  appMenu.style.right = `${rightOffset}px`;
+}
+
+function setMenuPanel(panelName) {
+  menuPanels.forEach((panel) => {
+    panel.classList.toggle('active', panel.dataset.panel === panelName);
+  });
+}
+
+function applyTheme(theme) {
+  document.body.classList.toggle('theme-light', theme === 'light');
+}
+
+function updateThemeToggle() {
+  if (!themeToggleBtn) return;
+  const isLight = currentTheme === 'light';
+  themeToggleBtn.textContent = isLight ? 'Light' : 'Dark';
+  themeToggleBtn.setAttribute('aria-pressed', String(isLight));
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  safeSetStorage(THEME_KEY, currentTheme);
+  applyTheme(currentTheme);
+  updateThemeToggle();
+}
+
 function updateDownloadBadge() {
   if (!downloadToggleBtn) return;
   downloadToggleBtn.classList.toggle('downloads-has-items', downloadsById.size > 0);
+}
+
+function openDownloadHistory() {
+  toggleDownloadShelf(true);
+  if (downloadHistoryList) {
+    downloadHistoryList.scrollTop = 0;
+  }
 }
 
 function createDownloadElement(item) {
