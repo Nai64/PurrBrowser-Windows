@@ -433,12 +433,14 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  line-height: 1;
   background: var(--chip-bg);
 }
 
 .tab-favicon img {
   width: 16px;
   height: 16px;
+  display: block;
 }
 
 .tab-title {
