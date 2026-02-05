@@ -47,6 +47,8 @@ body {
   --radius-sm: 8px;
   --sidebar-collapsed: 64px;
   --sidebar-expanded: 240px;
+  --titlebar-height: 34px;
+  --toolbar-offset: 62px;
 }
 
 body.theme-light {
@@ -407,6 +409,56 @@ body {
   background: var(--bg);
 }
 
+.titlebar {
+  height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.titlebar-title {
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+}
+
+.titlebar-controls {
+  display: flex;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+  width: 28px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
+}
+
+.titlebar-btn:hover {
+  background: var(--panel-soft);
+  border-color: var(--border-soft);
+  color: var(--text);
+}
+
+.titlebar-btn.close:hover {
+  background: rgba(255, 92, 92, 0.16);
+  border-color: rgba(255, 92, 92, 0.4);
+  color: #ff5c5c;
+}
+
 /* Navigation Bar */
 .toolbar {
   display: flex;
@@ -734,7 +786,7 @@ body {
 .download-shelf {
   position: fixed;
   right: 16px;
-  top: 62px;
+  top: calc(var(--titlebar-height) + var(--toolbar-offset));
   width: 320px;
   background: var(--panel-glass-strong);
   backdrop-filter: blur(14px);

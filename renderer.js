@@ -86,6 +86,7 @@ const downloadShelf = document.getElementById('download-shelf');
 const downloadList = document.getElementById('download-list');
 const downloadHistoryList = document.getElementById('download-history-list');
 const toolbar = document.querySelector('.toolbar');
+const titlebar = document.querySelector('.titlebar');
 const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloads"]') : null;
 const menuToggleBtn = toolbar ? toolbar.querySelector('[data-action="menu"]') : null;
 const sidebarSettingsBtn = document.getElementById('settings-btn');
@@ -230,6 +231,14 @@ function setupEventListeners() {
         openSettingsPage();
         closeAppMenu();
       }
+    });
+  }
+
+  if (titlebar) {
+    titlebar.addEventListener('click', (event) => {
+      const actionButton = event.target.closest('[data-window]');
+      if (!actionButton) return;
+      ipcRenderer.send('window-control', actionButton.dataset.window);
     });
   }
 }

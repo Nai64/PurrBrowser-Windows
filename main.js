@@ -14,7 +14,7 @@ function createWindow() {
     height: 900,
     minWidth: 800,
     minHeight: 600,
-    frame: true,
+    frame: false,
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
@@ -186,6 +186,22 @@ ipcMain.on('download-show', (event, payload) => {
 ipcMain.on('download-open', (event, payload) => {
   if (payload?.path) {
     shell.openPath(payload.path);
+  }
+});
+
+ipcMain.on('window-control', (event, action) => {
+  if (!mainWindow) return;
+
+  if (action === 'minimize') {
+    mainWindow.minimize();
+  } else if (action === 'maximize') {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  } else if (action === 'close') {
+    mainWindow.close();
   }
 });
 
