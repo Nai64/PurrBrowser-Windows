@@ -70,10 +70,6 @@ const { ipcRenderer } = require('electron');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
-ipcRenderer.send('ui-debug', 'renderer loaded');
-window.addEventListener('click', () => {
-  ipcRenderer.send('ui-debug', 'renderer click');
-});
 
 const urlInput = document.getElementById('url-input');
 const newTabBtn = document.getElementById('new-tab-btn');
@@ -151,7 +147,6 @@ function setupEventListeners() {
       const action = actionButton.dataset.action;
       if (!action) return;
 
-      ipcRenderer.send('ui-debug', `toolbar action: ${action}`);
       
       switch (action) {
         case 'back':

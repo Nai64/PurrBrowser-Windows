@@ -197,11 +197,6 @@ body.settings-ready {
   color: var(--text-muted);
 }
 
-.settings-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
 
 .theme-grid {
   display: grid;

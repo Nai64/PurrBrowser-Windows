@@ -300,8 +300,7 @@ body {
 .tab-item,
 .tab-favicon,
 .download-item,
-.menu-item,
-.menu-setting {
+.menu-item {
   transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, box-shadow var(--theme-transition) ease;
 }
 
@@ -325,10 +324,6 @@ body {
   animation: ui-rise 280ms ease;
 }
 
-.sidebar-titlebar-spacer {
-  height: var(--titlebar-height);
-  background: var(--panel-glass);
-}
 
 .sidebar:hover {
   width: var(--sidebar-expanded);
@@ -674,15 +669,6 @@ body {
   transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
 }
 
-.menu-panel {
-  display: none;
-  gap: 8px;
-}
-
-.menu-panel.active {
-  display: grid;
-}
-
 .menu-item {
   background: var(--panel-soft);
   border: 1px solid var(--border-soft);
@@ -698,70 +684,6 @@ body {
 .menu-item:hover {
   background: var(--panel-soft-hover);
   border-color: var(--tab-active-border);
-}
-
-.menu-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 2px 2px;
-}
-
-.menu-panel-title {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.menu-back {
-  border: 1px solid var(--border-soft);
-  background: transparent;
-  color: var(--text-muted);
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
-}
-
-.menu-back:hover {
-  color: var(--text);
-  border-color: var(--tab-active-border);
-  background: var(--accent-glow);
-}
-
-.menu-setting {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  background: var(--panel-soft);
-}
-
-.menu-setting-label {
-  font-size: 13px;
-  color: var(--text);
-}
-
-.menu-toggle {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-muted);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
-}
-
-.menu-toggle:hover {
-  color: var(--text);
-  border-color: var(--tab-active-border);
-  background: var(--accent-glow);
 }
 
 .search-engine-dropdown.active {
