@@ -510,6 +510,10 @@ body {
   background: var(--bg);
 }
 
+body.menu-open .webview-container {
+  pointer-events: none;
+}
+
 .tool-btn.close:hover {
   background: rgba(255, 92, 92, 0.16);
   border-color: rgba(255, 92, 92, 0.4);

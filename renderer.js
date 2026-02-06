@@ -411,6 +411,7 @@ function toggleAppMenu(forceState) {
   if (appMenuBackdrop) {
     appMenuBackdrop.classList.toggle('active', nextState);
   }
+  document.body.classList.toggle('menu-open', nextState);
 }
 
 function closeAppMenu() {
@@ -419,13 +420,14 @@ function closeAppMenu() {
   if (appMenuBackdrop) {
     appMenuBackdrop.classList.remove('active');
   }
+  document.body.classList.remove('menu-open');
 }
 
 function positionAppMenu() {
   if (!appMenu || !menuToggleBtn) return;
   const rect = menuToggleBtn.getBoundingClientRect();
   const rightOffset = Math.max(8, window.innerWidth - rect.right);
-  appMenu.style.top = `${rect.bottom + 16}px`;
+  appMenu.style.top = `${rect.bottom + 20}px`;
   appMenu.style.right = `${rightOffset}px`;
 }
 
