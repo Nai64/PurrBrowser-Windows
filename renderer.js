@@ -427,7 +427,7 @@ function positionAppMenu() {
   if (!appMenu || !menuToggleBtn) return;
   const rect = menuToggleBtn.getBoundingClientRect();
   const rightOffset = Math.max(8, window.innerWidth - rect.right);
-  appMenu.style.top = `${rect.bottom + 20}px`;
+  appMenu.style.top = `${rect.bottom + 24}px`;
   appMenu.style.right = `${rightOffset}px`;
 }
 
@@ -804,6 +804,14 @@ function createWebview(tab) {
   webview.addEventListener('dom-ready', () => {
     webview.dataset.domReady = 'true';
     updateNavigationButtons();
+  });
+
+  webview.addEventListener('focus', () => {
+    closeAppMenu();
+    closeHistoryDropdown();
+    if (searchEngineDropdown) {
+      searchEngineDropdown.classList.remove('active');
+    }
   });
 
   webview.addEventListener('did-start-loading', () => {
