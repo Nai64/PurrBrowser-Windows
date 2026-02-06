@@ -490,11 +490,25 @@ function handleInternalNavigation(url) {
   return false;
 }
 
-function openSettingsPage() {
+function openSettingsPage(forceReload = false) {
   const webview = getActiveWebview();
   if (!webview) return;
 
   const settingsUrl = getSettingsPageUrl();
+  const currentUrl = typeof webview.getURL === 'function' ? webview.getURL() : webview.src;
+  if (!forceReload && currentUrl && settingsPageUrl && currentUrl.startsWith(settingsPageUrl)) {
+    try {
+      const current = new URL(currentUrl);
+      const next = new URL(settingsUrl);
+      if (current.searchParams.get('theme') === next.searchParams.get('theme')) {
+        updateTabUrl(activeTabId, 'app://settings');
+        return;
+      }
+    } catch (error) {
+      // Ignore URL parse errors and continue with reload.
+    }
+  }
+
   webview.src = settingsUrl;
   updateTabUrl(activeTabId, `app://settings`);
 }
