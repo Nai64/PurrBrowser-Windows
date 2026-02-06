@@ -828,6 +828,9 @@ function createWebview(tab) {
   webview.addEventListener('focus', () => {
     closeAppMenu();
     closeHistoryDropdown();
+    if (downloadShelf) {
+      downloadShelf.classList.remove('active');
+    }
     if (searchEngineDropdown) {
       searchEngineDropdown.classList.remove('active');
     }
