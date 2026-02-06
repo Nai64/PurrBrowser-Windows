@@ -275,6 +275,15 @@ function setupEventListeners() {
   if (appMenuBackdrop) {
     appMenuBackdrop.addEventListener('click', () => closeAppMenu());
   }
+
+  if (downloadShelf && downloadToggleBtn) {
+    document.addEventListener('click', (event) => {
+      const clickedInside = downloadShelf.contains(event.target) || downloadToggleBtn.contains(event.target);
+      if (!clickedInside) {
+        downloadShelf.classList.remove('active');
+      }
+    });
+  }
 }
 
 function setupDownloadShelf() {
