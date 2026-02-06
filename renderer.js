@@ -77,6 +77,8 @@ const securityIcon = document.getElementById('security-icon');
 const searchEngineBtn = document.getElementById('search-engine-btn');
 const searchEngineIcon = document.getElementById('search-engine-icon');
 const searchEngineDropdown = document.getElementById('search-engine-dropdown');
+const historyDropdown = document.getElementById('history-dropdown');
+const historyList = document.getElementById('history-list');
 const downloadShelf = document.getElementById('download-shelf');
 const downloadList = document.getElementById('download-list');
 const downloadHistoryList = document.getElementById('download-history-list');
@@ -94,6 +96,9 @@ const dismissedDownloadIds = new Set();
 const DOWNLOAD_HISTORY_KEY = 'downloadHistory';
 const DOWNLOAD_HISTORY_LIMIT = 40;
 let downloadHistory = [];
+const BROWSE_HISTORY_KEY = 'browseHistory';
+const BROWSE_HISTORY_LIMIT = 60;
+let browseHistory = [];
 const THEME_KEY = 'theme';
 const THEMES = ['midnight', 'light', 'dusk', 'forest', 'sunset', 'aurora', 'graphite', 'ocean'];
 let currentTheme = safeGetStorage(THEME_KEY, 'midnight');
@@ -118,6 +123,7 @@ function init() {
 
   setupDownloadShelf();
   loadDownloadHistory();
+  loadBrowseHistory();
 }
 
 // Setup all event listeners
@@ -136,6 +142,17 @@ function setupEventListeners() {
   
   urlInput.addEventListener('focus', () => {
     urlInput.select();
+    openHistoryDropdown();
+  });
+
+  urlInput.addEventListener('input', () => {
+    updateHistoryDropdown();
+  });
+
+  urlInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeHistoryDropdown();
+    }
   });
   
   // Toolbar action handling (robust event delegation)
@@ -234,6 +251,23 @@ function setupEventListeners() {
       const actionButton = event.target.closest('[data-window]');
       if (!actionButton) return;
       ipcRenderer.send('window-control', actionButton.dataset.window);
+    });
+  }
+
+  if (historyDropdown && historyList) {
+    document.addEventListener('click', (event) => {
+      const clickedInside = historyDropdown.contains(event.target) || urlInput.contains(event.target);
+      if (!clickedInside) {
+        closeHistoryDropdown();
+      }
+    });
+
+    historyDropdown.addEventListener('click', (event) => {
+      const item = event.target.closest('[data-history-url]');
+      if (!item) return;
+      urlInput.value = item.dataset.historyUrl;
+      closeHistoryDropdown();
+      navigateToUrl();
     });
   }
 }
@@ -769,6 +803,7 @@ function createWebview(tab) {
   
   webview.addEventListener('page-title-updated', (e) => {
     updateTabTitle(tab.id, e.title);
+    updateHistoryTitle(tab.id, e.title);
   });
   
   webview.addEventListener('page-favicon-updated', (e) => {
@@ -781,11 +816,13 @@ function createWebview(tab) {
     updateTabUrl(tab.id, e.url);
     updateNavigationButtons();
     requestFallbackFavicon(tab.id, e.url);
+    addHistoryEntry(tab.id, e.url);
   });
   
   webview.addEventListener('did-navigate-in-page', (e) => {
     updateTabUrl(tab.id, e.url);
     updateNavigationButtons();
+    addHistoryEntry(tab.id, e.url);
   });
 
   webview.addEventListener('will-navigate', (e) => {
@@ -909,6 +946,116 @@ function updateTabTitle(tabId, title) {
     titleElement.textContent = tab.title;
     titleElement.title = tab.title;
   }
+}
+
+function loadBrowseHistory() {
+  browseHistory = safeGetJson(BROWSE_HISTORY_KEY, []);
+  if (!Array.isArray(browseHistory)) {
+    browseHistory = [];
+  }
+}
+
+function saveBrowseHistory() {
+  safeSetStorage(BROWSE_HISTORY_KEY, JSON.stringify(browseHistory));
+}
+
+function addHistoryEntry(tabId, url) {
+  if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) return;
+  if (isInternalSettingsUrl(url) || isInternalHomeUrl(url)) return;
+
+  const tab = getTab(tabId);
+  const title = tab?.title || url;
+
+  browseHistory = browseHistory.filter((entry) => entry.url !== url);
+  browseHistory.unshift({ url, title, timestamp: Date.now() });
+  browseHistory = browseHistory.slice(0, BROWSE_HISTORY_LIMIT);
+  saveBrowseHistory();
+
+  if (historyDropdown.classList.contains('active')) {
+    renderHistoryList(urlInput.value.trim());
+  }
+}
+
+function updateHistoryTitle(tabId, title) {
+  const tab = getTab(tabId);
+  if (!tab || !tab.url) return;
+  const index = browseHistory.findIndex((entry) => entry.url === tab.url);
+  if (index === -1) return;
+  browseHistory[index] = { ...browseHistory[index], title: title || browseHistory[index].title };
+  saveBrowseHistory();
+
+  if (historyDropdown.classList.contains('active')) {
+    renderHistoryList(urlInput.value.trim());
+  }
+}
+
+function openHistoryDropdown() {
+  if (!historyDropdown || !historyList) return;
+  renderHistoryList(urlInput.value.trim());
+  positionHistoryDropdown();
+  historyDropdown.classList.add('active');
+}
+
+function closeHistoryDropdown() {
+  if (!historyDropdown) return;
+  historyDropdown.classList.remove('active');
+}
+
+function updateHistoryDropdown() {
+  if (!historyDropdown) return;
+  if (!historyDropdown.classList.contains('active')) {
+    openHistoryDropdown();
+    return;
+  }
+  renderHistoryList(urlInput.value.trim());
+}
+
+function positionHistoryDropdown() {
+  if (!historyDropdown) return;
+  const addressBar = document.querySelector('.address-bar');
+  if (!addressBar) return;
+  const rect = addressBar.getBoundingClientRect();
+  historyDropdown.style.top = `${rect.bottom + 8}px`;
+  historyDropdown.style.left = `${rect.left}px`;
+  historyDropdown.style.width = `${rect.width}px`;
+}
+
+function renderHistoryList(filterValue) {
+  if (!historyList) return;
+  const query = (filterValue || '').toLowerCase();
+  const items = browseHistory
+    .filter((entry) => entry.url && entry.title)
+    .filter((entry) => !query || entry.url.toLowerCase().includes(query) || entry.title.toLowerCase().includes(query))
+    .slice(0, 10);
+
+  historyList.innerHTML = '';
+
+  if (items.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'history-item';
+    empty.textContent = query ? 'No matches found' : 'No browsing history yet';
+    historyList.appendChild(empty);
+    return;
+  }
+
+  items.forEach((entry) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'history-item';
+    item.dataset.historyUrl = entry.url;
+
+    const title = document.createElement('div');
+    title.className = 'history-title';
+    title.textContent = entry.title || entry.url;
+
+    const url = document.createElement('div');
+    url.className = 'history-url';
+    url.textContent = entry.url;
+
+    item.appendChild(title);
+    item.appendChild(url);
+    historyList.appendChild(item);
+  });
 }
 
 // Update tab favicon
