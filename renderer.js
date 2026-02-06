@@ -73,7 +73,6 @@ const { pathToFileURL } = require('url');
 
 const urlInput = document.getElementById('url-input');
 const newTabBtn = document.getElementById('new-tab-btn');
-const newTabBottomBtn = document.getElementById('new-tab-bottom');
 const securityIcon = document.getElementById('security-icon');
 const searchEngineBtn = document.getElementById('search-engine-btn');
 const searchEngineIcon = document.getElementById('search-engine-icon');
@@ -136,10 +135,6 @@ function init() {
 // Setup all event listeners
 function setupEventListeners() {
   newTabBtn.addEventListener('click', () => createTab(getHomePageUrl()));
-
-  if (newTabBottomBtn) {
-    newTabBottomBtn.addEventListener('click', () => createTab(getHomePageUrl()));
-  }
 
   if (sidebarSettingsBtn) {
     sidebarSettingsBtn.addEventListener('click', () => openSettingsPage());

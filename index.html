@@ -14,21 +14,21 @@
   <div class="browser-container">
     <!-- Sidebar with tabs -->
     <div class="sidebar">
-      <div class="sidebar-header">
-        <button id="new-tab-btn" class="sidebar-btn" title="New Tab">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-      </div>
-      
       <div class="tabs-container" id="tabs-container">
         <!-- Tabs will be dynamically added here -->
       </div>
-      
-      <div class="sidebar-footer">
-        <button id="new-tab-bottom" class="sidebar-newtab" type="button">+ New tab</button>
+
+      <div class="sidebar-bottom">
+        <button id="new-tab-btn" class="tab-item tab-new" type="button" title="New Tab">
+          <div class="tab-favicon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </div>
+          <div class="tab-title">New Tab</div>
+        </button>
+
         <button id="settings-btn" class="sidebar-btn" title="Settings">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
