@@ -1071,6 +1071,7 @@ function renderHistoryList(filterValue) {
     .filter((entry) => !query || entry.url.toLowerCase().includes(query) || entry.title.toLowerCase().includes(query))
     .slice(0, 10);
 
+  historyList.classList.add('history-refreshing');
   historyList.innerHTML = '';
 
   if (items.length === 0) {
@@ -1078,6 +1079,7 @@ function renderHistoryList(filterValue) {
     empty.className = 'history-item';
     empty.textContent = query ? 'No matches found' : 'No browsing history yet';
     historyList.appendChild(empty);
+    historyList.classList.remove('history-refreshing');
     return;
   }
 
@@ -1098,6 +1100,10 @@ function renderHistoryList(filterValue) {
     item.appendChild(title);
     item.appendChild(url);
     historyList.appendChild(item);
+  });
+
+  requestAnimationFrame(() => {
+    historyList.classList.remove('history-refreshing');
   });
 }
 
