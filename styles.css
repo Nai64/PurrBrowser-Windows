@@ -727,6 +727,20 @@ body {
   transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
 }
 
+.app-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 9999;
+}
+
+.app-menu-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .app-menu.active {
   opacity: 1;
   visibility: visible;

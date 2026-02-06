@@ -87,6 +87,7 @@ const downloadToggleBtn = toolbar ? toolbar.querySelector('[data-action="downloa
 const menuToggleBtn = toolbar ? toolbar.querySelector('[data-action="menu"]') : null;
 const sidebarSettingsBtn = document.getElementById('settings-btn');
 const appMenu = document.getElementById('app-menu');
+const appMenuBackdrop = document.getElementById('app-menu-backdrop');
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
@@ -270,6 +271,10 @@ function setupEventListeners() {
       navigateToUrl();
     });
   }
+
+  if (appMenuBackdrop) {
+    appMenuBackdrop.addEventListener('click', () => closeAppMenu());
+  }
 }
 
 function setupDownloadShelf() {
@@ -403,18 +408,24 @@ function toggleAppMenu(forceState) {
   }
 
   appMenu.classList.toggle('active', nextState);
+  if (appMenuBackdrop) {
+    appMenuBackdrop.classList.toggle('active', nextState);
+  }
 }
 
 function closeAppMenu() {
   if (!appMenu) return;
   appMenu.classList.remove('active');
+  if (appMenuBackdrop) {
+    appMenuBackdrop.classList.remove('active');
+  }
 }
 
 function positionAppMenu() {
   if (!appMenu || !menuToggleBtn) return;
   const rect = menuToggleBtn.getBoundingClientRect();
   const rightOffset = Math.max(8, window.innerWidth - rect.right);
-  appMenu.style.top = `${rect.bottom + 12}px`;
+  appMenu.style.top = `${rect.bottom + 16}px`;
   appMenu.style.right = `${rightOffset}px`;
 }
 
