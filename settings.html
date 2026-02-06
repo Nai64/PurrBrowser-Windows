@@ -104,11 +104,26 @@
       </div>
       <p class="settings-text">Use the Downloads button or the menu to review recent files.</p>
     </section>
+
+    <section class="settings-card">
+      <div class="settings-card-header">
+        <h2>Sidebar</h2>
+        <span class="settings-note">Personalize your layout.</span>
+      </div>
+      <label class="settings-toggle" for="sidebar-expanded-toggle">
+        <span class="toggle-label">Always expand sidebar</span>
+        <span class="toggle-control">
+          <input type="checkbox" id="sidebar-expanded-toggle">
+          <span class="toggle-slider" aria-hidden="true"></span>
+        </span>
+      </label>
+    </section>
   </div>
 
   <script>
     const themeLabel = document.getElementById('current-theme');
     const themeButtons = document.querySelectorAll('[data-theme]');
+    const sidebarToggle = document.getElementById('sidebar-expanded-toggle');
     const themeLabels = {
       midnight: 'Midnight',
       light: 'Pearl',
@@ -124,6 +139,7 @@
       const params = new URLSearchParams(window.location.search);
       const theme = params.get('theme') || 'midnight';
       const safeTheme = themeLabels[theme] ? theme : 'midnight';
+      const sidebar = params.get('sidebar') || 'expanded';
 
       document.body.className = document.body.className
         .split(' ')
@@ -138,6 +154,10 @@
         button.classList.toggle('active', button.dataset.theme === safeTheme);
         button.setAttribute('aria-pressed', String(button.dataset.theme === safeTheme));
       });
+
+      if (sidebarToggle) {
+        sidebarToggle.checked = sidebar !== 'collapsed';
+      }
     }
 
     themeButtons.forEach((button) => {
@@ -148,6 +168,14 @@
         window.location.search = params.toString();
       });
     });
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('change', () => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('sidebar', sidebarToggle.checked ? 'expanded' : 'collapsed');
+        window.location.search = params.toString();
+      });
+    }
 
     applyThemeFromQuery();
     requestAnimationFrame(() => {

@@ -104,6 +104,8 @@ let browseHistory = [];
 const THEME_KEY = 'theme';
 const THEMES = ['midnight', 'light', 'dusk', 'forest', 'sunset', 'aurora', 'graphite', 'ocean'];
 let currentTheme = safeGetStorage(THEME_KEY, 'midnight');
+const SIDEBAR_EXPANDED_KEY = 'sidebarExpanded';
+let sidebarExpanded = safeGetStorage(SIDEBAR_EXPANDED_KEY, 'true') === 'true';
 const SETTINGS_SCHEMES = new Set(['app:', 'browser:', 'firefox:']);
 const SETTINGS_HOST = 'settings';
 const HOME_HOST = 'home';
@@ -117,6 +119,7 @@ function init() {
   updateSearchEngineUI();
 
   applyTheme(currentTheme);
+  applySidebarExpanded(sidebarExpanded);
   
   // Create first tab
   createTab(getHomePageUrl());
@@ -539,6 +542,7 @@ function getSettingsPageUrl(theme = currentTheme) {
 
   const url = new URL(settingsPageUrl);
   url.searchParams.set('theme', THEMES.includes(theme) ? theme : 'midnight');
+  url.searchParams.set('sidebar', sidebarExpanded ? 'expanded' : 'collapsed');
   return url.toString();
 }
 
@@ -566,9 +570,24 @@ function applySettingsFromFileUrl(url) {
     if (THEMES.includes(theme)) {
       setTheme(theme);
     }
+
+    const sidebar = parsed.searchParams.get('sidebar');
+    if (sidebar === 'expanded' || sidebar === 'collapsed') {
+      setSidebarExpanded(sidebar === 'expanded');
+    }
   } catch (error) {
     // Ignore malformed URLs.
   }
+}
+
+function applySidebarExpanded(isExpanded) {
+  document.body.classList.toggle('sidebar-expanded', !!isExpanded);
+}
+
+function setSidebarExpanded(isExpanded) {
+  sidebarExpanded = !!isExpanded;
+  safeSetStorage(SIDEBAR_EXPANDED_KEY, String(sidebarExpanded));
+  applySidebarExpanded(sidebarExpanded);
 }
 
 function isInternalHomeUrl(url) {
@@ -1049,6 +1068,7 @@ function openTabContextMenu(tabId, x, y) {
   tabContextMenu.style.left = `${rawX}px`;
   tabContextMenu.style.top = `${rawY}px`;
   tabContextMenu.classList.add('active');
+  document.body.classList.add('context-open');
 
   const rect = tabContextMenu.getBoundingClientRect();
   const maxLeft = window.innerWidth - rect.width - 8;
@@ -1062,6 +1082,7 @@ function openTabContextMenu(tabId, x, y) {
 function closeTabContextMenu() {
   if (!tabContextMenu) return;
   tabContextMenu.classList.remove('active');
+  document.body.classList.remove('context-open');
   contextMenuTabId = null;
 }
 

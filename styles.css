@@ -329,6 +329,10 @@ body {
   width: var(--sidebar-expanded);
 }
 
+body.sidebar-expanded .sidebar {
+  width: var(--sidebar-expanded);
+}
+
 .sidebar-header {
   padding: 12px;
   border-bottom: none;
@@ -476,6 +480,10 @@ body {
   opacity: 1;
 }
 
+body.sidebar-expanded .tab-title {
+  opacity: 1;
+}
+
 .tab-close {
   width: 20px;
   height: 20px;
@@ -494,6 +502,10 @@ body {
 }
 
 .sidebar:hover .tab-close {
+  opacity: 1;
+}
+
+body.sidebar-expanded .tab-close {
   opacity: 1;
 }
 
@@ -529,6 +541,10 @@ body {
 }
 
 body.menu-open .webview-container {
+  pointer-events: none;
+}
+
+body.context-open .webview-container {
   pointer-events: none;
 }
 
@@ -832,8 +848,8 @@ body.menu-open .webview-container {
 }
 
 .context-item {
-  background: var(--panel-soft);
-  border: 1px solid var(--border-soft);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 10px 12px;
   text-align: left;
