@@ -345,6 +345,10 @@ body.sidebar-expanded .sidebar {
   padding: 10px;
 }
 
+.tabs-footer {
+  padding: 0 10px 8px;
+}
+
 .sidebar-btn {
   width: 36px;
   height: 36px;
@@ -412,6 +416,8 @@ body.sidebar-expanded .sidebar {
   width: 100%;
   background: transparent;
   border: 1px solid transparent;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 .tab-new:hover {
