@@ -854,7 +854,7 @@ body.menu-open .webview-container {
 .download-shelf {
   position: fixed;
   right: 16px;
-  top: calc(var(--titlebar-height) + var(--toolbar-offset));
+  top: 0;
   width: 320px;
   background: var(--panel-glass-strong);
   backdrop-filter: blur(14px);

@@ -394,6 +394,16 @@ function toggleDownloadShelf(forceState) {
     : !downloadShelf.classList.contains('active');
 
   downloadShelf.classList.toggle('active', nextState);
+  if (nextState) {
+    alignDownloadShelf();
+  }
+}
+
+function alignDownloadShelf() {
+  if (!downloadShelf || !menuToggleBtn) return;
+  const rect = menuToggleBtn.getBoundingClientRect();
+  const offsetTop = rect.bottom + 8;
+  downloadShelf.style.top = `${offsetTop}px`;
 }
 
 function toggleAppMenu(forceState) {
