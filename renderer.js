@@ -301,30 +301,23 @@ function setupEventListeners() {
       if (!actionButton) return;
 
       const tabId = contextMenuTabId ?? activeTabId;
-      if (!tabId) return;
+      if (tabId === null || tabId === undefined) {
+        closeTabContextMenu();
+        return;
+      }
 
       const action = actionButton.dataset.action;
       if (action === 'context-reload') {
         reloadTabById(tabId);
-      }
-
-      if (action === 'context-duplicate') {
+      } else if (action === 'context-duplicate') {
         duplicateTab(tabId);
-      }
-
-      if (action === 'context-pin') {
+      } else if (action === 'context-pin') {
         togglePinTab(tabId);
-      }
-
-      if (action === 'context-close') {
+      } else if (action === 'context-close') {
         closeTab(tabId);
-      }
-
-      if (action === 'context-close-others') {
+      } else if (action === 'context-close-others') {
         closeOtherTabs(tabId);
-      }
-
-      if (action === 'context-close-right') {
+      } else if (action === 'context-close-right') {
         closeTabsToRight(tabId);
       }
 
