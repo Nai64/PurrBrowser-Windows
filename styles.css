@@ -423,6 +423,24 @@ body {
   border-radius: 4px;
 }
 
+.tab-item.pinned {
+  background: var(--panel-soft);
+  border-color: var(--border-soft);
+}
+
+.tab-item.pinned::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--accent-2);
+  opacity: 0.8;
+}
+
 .tab-favicon {
   width: 20px;
   height: 20px;
@@ -787,6 +805,73 @@ body.menu-open .webview-container {
 .menu-item:hover {
   background: var(--panel-soft-hover);
   border-color: var(--tab-active-border);
+}
+
+.context-menu {
+  position: fixed;
+  min-width: 220px;
+  background: var(--menu-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 10000;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
+}
+
+.context-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
+}
+
+.context-item {
+  background: var(--panel-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--theme-transition) ease, color var(--theme-transition) ease, border-color var(--theme-transition) ease, transform 0.2s ease;
+}
+
+.context-menu.active .context-item {
+  animation: context-item-enter 160ms ease;
+}
+
+.context-item:hover {
+  background: var(--panel-soft-hover);
+  border-color: var(--tab-active-border);
+}
+
+.context-item:active {
+  transform: translateY(1px);
+}
+
+.context-separator {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 2px 6px;
+  opacity: 0.7;
+}
+
+@keyframes context-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .search-engine-dropdown.active {

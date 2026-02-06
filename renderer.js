@@ -88,6 +88,7 @@ const menuToggleBtn = toolbar ? toolbar.querySelector('[data-action="menu"]') : 
 const sidebarSettingsBtn = document.getElementById('settings-btn');
 const appMenu = document.getElementById('app-menu');
 const appMenuBackdrop = document.getElementById('app-menu-backdrop');
+const tabContextMenu = document.getElementById('tab-context-menu');
 const backBtn = toolbar ? toolbar.querySelector('[data-action="back"]') : null;
 const forwardBtn = toolbar ? toolbar.querySelector('[data-action="forward"]') : null;
 const refreshBtn = toolbar ? toolbar.querySelector('[data-action="refresh"]') : null;
@@ -108,6 +109,7 @@ const SETTINGS_HOST = 'settings';
 const HOME_HOST = 'home';
 let settingsPageUrl = '';
 let homePageUrl = '';
+let contextMenuTabId = null;
 
 // Initialize browser
 function init() {
@@ -274,6 +276,57 @@ function setupEventListeners() {
 
   if (appMenuBackdrop) {
     appMenuBackdrop.addEventListener('click', () => closeAppMenu());
+  }
+
+  if (tabContextMenu) {
+    document.addEventListener('click', (event) => {
+      if (!tabContextMenu.contains(event.target)) {
+        closeTabContextMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeTabContextMenu();
+      }
+    });
+
+    window.addEventListener('resize', () => closeTabContextMenu());
+
+    tabContextMenu.addEventListener('click', (event) => {
+      const actionButton = event.target.closest('[data-action]');
+      if (!actionButton) return;
+
+      const tabId = contextMenuTabId ?? activeTabId;
+      if (!tabId) return;
+
+      const action = actionButton.dataset.action;
+      if (action === 'context-reload') {
+        reloadTabById(tabId);
+      }
+
+      if (action === 'context-duplicate') {
+        duplicateTab(tabId);
+      }
+
+      if (action === 'context-pin') {
+        togglePinTab(tabId);
+      }
+
+      if (action === 'context-close') {
+        closeTab(tabId);
+      }
+
+      if (action === 'context-close-others') {
+        closeOtherTabs(tabId);
+      }
+
+      if (action === 'context-close-right') {
+        closeTabsToRight(tabId);
+      }
+
+      closeTabContextMenu();
+    });
   }
 
   if (downloadShelf && downloadToggleBtn) {
@@ -761,7 +814,8 @@ function createTab(url = getHomePageUrl()) {
     url: url,
     title: 'New Tab',
     favicon: null,
-    loading: false
+    loading: false,
+    pinned: false
   };
   
   tabs.push(tab);
@@ -785,6 +839,7 @@ function createTabElement(tab) {
   const tabElement = document.createElement('div');
   tabElement.className = 'tab-item';
   tabElement.dataset.tabId = tab.id;
+  tabElement.classList.toggle('pinned', !!tab.pinned);
   
   const favicon = document.createElement('div');
   favicon.className = 'tab-favicon';
@@ -807,6 +862,10 @@ function createTabElement(tab) {
   tabElement.appendChild(closeBtn);
   
   tabElement.addEventListener('click', () => switchTab(tab.id));
+  tabElement.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+    openTabContextMenu(tab.id, event.clientX, event.clientY);
+  });
   
   return tabElement;
 }
@@ -828,12 +887,25 @@ function createWebview(tab) {
   webview.addEventListener('focus', () => {
     closeAppMenu();
     closeHistoryDropdown();
+    closeTabContextMenu();
     if (downloadShelf) {
       downloadShelf.classList.remove('active');
     }
     if (searchEngineDropdown) {
       searchEngineDropdown.classList.remove('active');
     }
+  });
+
+  webview.addEventListener('context-menu', (event) => {
+    if (!tabContextMenu) return;
+    if (typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+    const params = event.params || {};
+    const rect = webview.getBoundingClientRect();
+    const x = rect.left + (params.x || 0);
+    const y = rect.top + (params.y || 0);
+    openTabContextMenu(tab.id, x, y);
   });
 
   webview.addEventListener('did-start-loading', () => {
@@ -892,6 +964,7 @@ function createWebview(tab) {
 
 // Switch to a tab
 function switchTab(tabId) {
+  closeTabContextMenu();
   activeTabId = tabId;
   
   // Update tab UI
@@ -951,6 +1024,55 @@ function getActiveWebview() {
   return document.getElementById(`webview-${activeTabId}`);
 }
 
+function getWebviewByTabId(tabId) {
+  if (tabId === null || tabId === undefined) return null;
+  return document.getElementById(`webview-${tabId}`);
+}
+
+function openTabContextMenu(tabId, x, y) {
+  if (!tabContextMenu) return;
+
+  closeAppMenu();
+  closeHistoryDropdown();
+  if (searchEngineDropdown) {
+    searchEngineDropdown.classList.remove('active');
+  }
+  if (downloadShelf) {
+    downloadShelf.classList.remove('active');
+  }
+
+  contextMenuTabId = tabId;
+  setContextMenuPinLabel(tabId);
+
+  const rawX = Number.isFinite(x) ? x : 0;
+  const rawY = Number.isFinite(y) ? y : 0;
+  tabContextMenu.style.left = `${rawX}px`;
+  tabContextMenu.style.top = `${rawY}px`;
+  tabContextMenu.classList.add('active');
+
+  const rect = tabContextMenu.getBoundingClientRect();
+  const maxLeft = window.innerWidth - rect.width - 8;
+  const maxTop = window.innerHeight - rect.height - 8;
+  const clampedLeft = Math.min(Math.max(8, rawX), Math.max(8, maxLeft));
+  const clampedTop = Math.min(Math.max(8, rawY), Math.max(8, maxTop));
+  tabContextMenu.style.left = `${clampedLeft}px`;
+  tabContextMenu.style.top = `${clampedTop}px`;
+}
+
+function closeTabContextMenu() {
+  if (!tabContextMenu) return;
+  tabContextMenu.classList.remove('active');
+  contextMenuTabId = null;
+}
+
+function setContextMenuPinLabel(tabId) {
+  if (!tabContextMenu) return;
+  const tab = getTab(tabId);
+  const pinButton = tabContextMenu.querySelector('[data-action="context-pin"]');
+  if (!pinButton) return;
+  pinButton.textContent = tab && tab.pinned ? 'Unpin Tab' : 'Pin Tab';
+}
+
 function isWebviewReady(webview) {
   return webview && webview.dataset.domReady === 'true';
 }
@@ -989,6 +1111,68 @@ function updateTabTitle(tabId, title) {
     titleElement.textContent = tab.title;
     titleElement.title = tab.title;
   }
+}
+
+function updateTabPinnedState(tabId) {
+  const tab = getTab(tabId);
+  const tabElement = document.querySelector(`.tab-item[data-tab-id="${tabId}"]`);
+  if (!tab || !tabElement) return;
+  tabElement.classList.toggle('pinned', !!tab.pinned);
+}
+
+function sortTabsByPinned() {
+  if (!tabsContainer) return;
+  const pinnedTabs = tabs.filter((tab) => tab.pinned);
+  const unpinnedTabs = tabs.filter((tab) => !tab.pinned);
+  tabs = [...pinnedTabs, ...unpinnedTabs];
+
+  const fragment = document.createDocumentFragment();
+  tabs.forEach((tab) => {
+    const element = document.querySelector(`.tab-item[data-tab-id="${tab.id}"]`);
+    if (element) {
+      fragment.appendChild(element);
+    }
+  });
+  tabsContainer.appendChild(fragment);
+}
+
+function togglePinTab(tabId) {
+  const tab = getTab(tabId);
+  if (!tab) return;
+  tab.pinned = !tab.pinned;
+  updateTabPinnedState(tabId);
+  sortTabsByPinned();
+}
+
+function reloadTabById(tabId) {
+  const webview = getWebviewByTabId(tabId);
+  if (isWebviewReady(webview)) {
+    webview.reload();
+  }
+}
+
+function duplicateTab(tabId) {
+  const tab = getTab(tabId);
+  if (!tab) return;
+  const newTabId = createTab(tab.url || getHomePageUrl());
+  updateTabTitle(newTabId, tab.title);
+  updateTabFavicon(newTabId, tab.favicon);
+}
+
+function closeOtherTabs(tabId) {
+  const tab = getTab(tabId);
+  if (!tab) return;
+  switchTab(tabId);
+  const tabIds = tabs.filter((entry) => entry.id !== tabId).map((entry) => entry.id);
+  tabIds.forEach((id) => closeTab(id));
+}
+
+function closeTabsToRight(tabId) {
+  const index = tabs.findIndex((tab) => tab.id === tabId);
+  if (index === -1) return;
+  switchTab(tabId);
+  const tabIds = tabs.slice(index + 1).map((tab) => tab.id);
+  tabIds.forEach((id) => closeTab(id));
 }
 
 function loadBrowseHistory() {
