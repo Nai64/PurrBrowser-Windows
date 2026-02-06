@@ -190,7 +190,8 @@ ipcMain.on('download-open', (event, payload) => {
 });
 
 ipcMain.on('window-control', (event, action) => {
-  if (!mainWindow) return;
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  if (!mainWindow.webContents || mainWindow.webContents.isDestroyed()) return;
 
   if (action === 'minimize') {
     mainWindow.minimize();
