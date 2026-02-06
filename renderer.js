@@ -427,7 +427,7 @@ function positionAppMenu() {
   if (!appMenu || !menuToggleBtn) return;
   const rect = menuToggleBtn.getBoundingClientRect();
   const rightOffset = Math.max(8, window.innerWidth - rect.right);
-  appMenu.style.top = `${rect.bottom + 28}px`;
+  appMenu.style.top = `${rect.bottom + 8}px`;
   appMenu.style.right = `${rightOffset}px`;
 }
 
